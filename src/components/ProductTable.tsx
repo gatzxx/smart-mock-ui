@@ -26,7 +26,7 @@ const ProductRow = memo(function ProductRow({ product }: ProductRowProps) {
       <TableCell>{product.price}</TableCell>
       <TableCell>
         <Badge variant={product.inStock ? "success" : "muted"}>
-          {product.inStock ? "In stock" : "Out of stock"}
+          {product.inStock ? "В наличии" : "Нет в наличии"}
         </Badge>
       </TableCell>
     </TableRow>

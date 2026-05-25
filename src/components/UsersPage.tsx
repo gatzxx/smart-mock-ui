@@ -1,10 +1,20 @@
 import { memo, useCallback, useMemo } from "react";
 
+import { SearchEmpty } from "@/components/SearchEmpty";
+import { TableSearchField } from "@/components/TableSearchField";
+import { UserTable } from "@/components/UserTable";
+import { UsersEmpty } from "@/components/UsersEmpty";
+import { UsersError } from "@/components/UsersError";
+import { UsersSkeleton } from "@/components/UsersSkeleton";
+import { useClientSearch } from "@/hooks/useClientSearch";
 import { useUsers } from "@/hooks/useUsers";
-import { UserTable } from "./UserTable";
-import { UsersEmpty } from "./UsersEmpty";
-import { UsersError } from "./UsersError";
-import { UsersSkeleton } from "./UsersSkeleton";
+import type { User } from "@/types/user";
+
+const USERS_SEARCH_PLACEHOLDER = "Поиск по имени, email или роли";
+
+function getUserSearchText(user: User): string {
+  return `${user.fullName} ${user.email} ${user.role}`;
+}
 
 export const UsersPage = memo(function UsersPage() {
   const apiBaseUrl = useMemo(
@@ -13,6 +23,11 @@ export const UsersPage = memo(function UsersPage() {
   );
 
   const { data, isPending, isError, error, refetch } = useUsers(apiBaseUrl);
+
+  const { query, setQuery, filteredItems } = useClientSearch(
+    data ?? [],
+    getUserSearchText,
+  );
 
   const handleRetry = useCallback(() => {
     void refetch();
@@ -37,5 +52,23 @@ export const UsersPage = memo(function UsersPage() {
     return <UsersEmpty />;
   }
 
-  return <UserTable users={data} />;
+  return (
+    <div>
+      <TableSearchField
+        placeholder={USERS_SEARCH_PLACEHOLDER}
+        testId="users-search"
+        value={query}
+        onChange={setQuery}
+      />
+      {filteredItems.length === 0 ? (
+        <SearchEmpty
+          description="Попробуйте изменить запрос."
+          testId="users-search-empty"
+          title="Ничего не найдено"
+        />
+      ) : (
+        <UserTable users={filteredItems} />
+      )}
+    </div>
+  );
 });

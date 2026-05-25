@@ -26,8 +26,8 @@ describe("ProductTable", () => {
     expect(screen.getByTestId("product-table")).toBeInTheDocument();
     expect(screen.getByText("Wireless Mouse")).toBeInTheDocument();
     expect(screen.getByText("$29.99")).toBeInTheDocument();
-    expect(screen.getByText("In stock")).toBeInTheDocument();
+    expect(screen.getByText("В наличии")).toBeInTheDocument();
     expect(screen.getByText("USB Hub")).toBeInTheDocument();
-    expect(screen.getByText("Out of stock")).toBeInTheDocument();
+    expect(screen.getByText("Нет в наличии")).toBeInTheDocument();
   });
 });

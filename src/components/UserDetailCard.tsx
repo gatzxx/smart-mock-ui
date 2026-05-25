@@ -38,7 +38,7 @@ export const UserDetailCard = memo(function UserDetailCard({ user }: UserDetailC
           <dd className="truncate font-mono text-xs">{user.id}</dd>
         </dl>
         <div>
-          <p className="mb-1 text-sm font-medium text-muted-foreground">Bio</p>
+          <p className="mb-1 text-sm font-medium text-muted-foreground">О себе</p>
           <p className="text-sm leading-relaxed">{user.bio}</p>
         </div>
         <Button asChild className="mt-2" variant="outline">

@@ -3,65 +3,69 @@
 ![React](https://img.shields.io/badge/react-19-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/typescript-5.8-3178C6?logo=typescript&logoColor=white)
 
-Demo admin-panel for [smart-mock-api](https://github.com/gatzxx/smart-mock-api): routing, two entities, async UX states.
+Демо admin-panel для [smart-mock-api](https://github.com/gatzxx/smart-mock-api): routing, две сущности, поиск, meta API.
 
 ## Live Demo
 
 **https://smart-mock-ui.vercel.app**
 
-| Resource | API |
-|----------|-----|
-| Users | https://smart-mock-api.onrender.com/api/users |
-| Products | https://smart-mock-api.onrender.com/api/products |
+| Ресурс | API |
+|--------|-----|
+| Пользователи | https://smart-mock-api.onrender.com/api/users |
+| Товары | https://smart-mock-api.onrender.com/api/products |
+| Meta | https://smart-mock-api.onrender.com/__meta |
 
-## Pages
+## Страницы
 
-| Route | Description |
-|-------|-------------|
-| `/users` | User list (shadcn Table, link to detail) |
-| `/users/:id` | User profile card (avatar, phone, bio) |
-| `/products` | Product list with stock badges |
+| Маршрут | Описание |
+|---------|----------|
+| `/users` | Список пользователей, поиск, ссылка на карточку |
+| `/users/:id` | Профиль: avatar, phone, bio, breadcrumbs |
+| `/products` | Список товаров, badge наличия, поиск |
+| `/meta` | Discovery-эндпoинты mock-api |
+| `*` | Страница 404 |
 
-## UX states (each page)
+## UX-состояния (на каждой data-странице)
 
-- **Loading** - skeleton (set `RESPONSE_DELAY_MS=1000` on mock-api)
-- **Error** - alert + retry button
-- **Empty** - card when API returns `[]`
+- **Loading** - skeleton (`RESPONSE_DELAY_MS=1000` на mock-api)
+- **Error** - alert + «Повторить»
+- **Empty** - card при пустом массиве
+- **Search empty** - «Ничего не найдено» при фильтре
 
-## Local run
+## Локальный запуск
 
 ```bash
-# Terminal 1 - mock-api
+# Терминал 1 - mock-api
 git clone https://github.com/gatzxx/smart-mock-api.git
 cd smart-mock-api && cp .env.example .env && npm install && npm run dev
 
-# Terminal 2 - UI
+# Терминал 2 - UI
 cp .env.example .env
 npm install && npm run dev
 ```
 
 http://localhost:5173 · API: http://localhost:3000
 
-| Variable | Value |
-|----------|-------|
+| Переменная | Значение |
+|------------|----------|
 | `VITE_API_URL` | `http://localhost:3000` |
 
-## Scripts
+## Скрипты
 
-| Command | Action |
-|---------|--------|
-| `npm run dev` | Dev server |
-| `npm run build` | Production build |
+| Команда | Действие |
+|---------|----------|
+| `npm run dev` | Dev-сервер |
+| `npm run build` | Production-сборка |
 | `npm run check` | typecheck + test |
 
-## Related repos
+## Связанные репозитории
 
 - [smart-mock-api](https://github.com/gatzxx/smart-mock-api) - schema-driven mock
 
-## Stack
+## Стек
 
 Vite · React 19 · TypeScript · TanStack Query · React Router · shadcn/ui · Tailwind · Vitest
 
-## License
+## Лицензия
 
 MIT

@@ -1,17 +1,23 @@
-import { Package, Users } from "lucide-react";
+import { FileJson, LayoutDashboard, Package, Users } from "lucide-react";
 import { memo, useCallback, useMemo } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 
+import { ApiHealthBadge } from "@/components/ApiHealthBadge";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { to: "/users", label: "Users", icon: Users },
-  { to: "/products", label: "Products", icon: Package },
+  { to: "/", label: "Обзор", icon: LayoutDashboard, end: true },
+  { to: "/users", label: "Пользователи", icon: Users },
+  { to: "/products", label: "Товары", icon: Package },
+  { to: "/meta", label: "Meta API", icon: FileJson },
 ] as const;
 
-const API_META_URL = "https://smart-mock-api.onrender.com/__meta";
-
 export const AppShell = memo(function AppShell() {
+  const apiBaseUrl = useMemo(
+    () => import.meta.env.VITE_API_URL ?? "http://localhost:3000",
+    [],
+  );
+
   const navLinkClassName = useCallback(
     ({ isActive }: { isActive: boolean }) =>
       cn(
@@ -25,8 +31,13 @@ export const AppShell = memo(function AppShell() {
 
   const navItems = useMemo(
     () =>
-      NAV_ITEMS.map(({ to, label, icon: Icon }) => (
-        <NavLink key={to} className={navLinkClassName} to={to}>
+      NAV_ITEMS.map(({ to, label, icon: Icon, ...item }) => (
+        <NavLink
+          key={to}
+          className={navLinkClassName}
+          end={"end" in item ? item.end : undefined}
+          to={to}
+        >
           <Icon aria-hidden="true" className="size-4" />
           {label}
         </NavLink>
@@ -41,9 +52,9 @@ export const AppShell = memo(function AppShell() {
           <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
             Smart Mock
           </p>
-          <p className="mt-1 text-sm font-medium text-sidebar-foreground">Admin Demo</p>
+          <p className="mt-1 text-sm font-medium text-sidebar-foreground">Демо админки</p>
         </div>
-        <nav aria-label="Main navigation" className="flex flex-1 flex-col gap-1 p-3">
+        <nav aria-label="Основная навигация" className="flex flex-1 flex-col gap-1 p-3">
           {navItems}
         </nav>
       </aside>
@@ -54,20 +65,21 @@ export const AppShell = memo(function AppShell() {
             <div>
               <h1 className="text-xl font-semibold tracking-tight">Smart Mock UI</h1>
               <p className="text-sm text-muted-foreground">
-                Demo frontend for smart-mock-api
+                Демо-фронт для smart-mock-api
               </p>
             </div>
-            <a
-              className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-              href={API_META_URL}
-              rel="noreferrer"
-              target="_blank"
-            >
-              API meta
-            </a>
+            <div className="flex flex-wrap items-center gap-3">
+              <ApiHealthBadge apiBaseUrl={apiBaseUrl} />
+              <Link
+                className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+                to="/meta"
+              >
+                Meta API
+              </Link>
+            </div>
           </div>
           <nav
-            aria-label="Mobile navigation"
+            aria-label="Мобильная навигация"
             className="mt-4 flex gap-2 md:hidden"
           >
             {navItems}
