@@ -1,17 +1,20 @@
 import { memo } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
 
-import { UsersPage } from "./components/UsersPage";
+import { AppShell } from "@/components/layout/AppShell";
+import { UsersPage } from "@/components/UsersPage";
+import { ProductsPlaceholderPage } from "@/pages/ProductsPlaceholderPage";
+import { UserDetailPlaceholderPage } from "@/pages/UserDetailPlaceholderPage";
 
 export const App = memo(function App() {
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>Smart Mock UI</h1>
-        <p>Демо-фронт для smart-mock-api</p>
-      </header>
-      <main>
-        <UsersPage />
-      </main>
-    </div>
+    <Routes>
+      <Route element={<AppShell />}>
+        <Route element={<Navigate replace to="/users" />} index />
+        <Route element={<UsersPage />} path="users" />
+        <Route element={<UserDetailPlaceholderPage />} path="users/:id" />
+        <Route element={<ProductsPlaceholderPage />} path="products" />
+      </Route>
+    </Routes>
   );
 });

@@ -1,6 +1,6 @@
 import { memo, useCallback, useMemo } from "react";
 
-import { useUsers } from "../hooks/useUsers";
+import { useUsers } from "@/hooks/useUsers";
 import { UserTable } from "./UserTable";
 import { UsersEmpty } from "./UsersEmpty";
 import { UsersError } from "./UsersError";
