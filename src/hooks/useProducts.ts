@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { fetchProducts } from "@/api/productsApi";
-
-const PRODUCTS_QUERY_KEY = "products";
+import { queryKeys } from "@/constants/queryKeys";
 
 export function useProducts(apiBaseUrl: string) {
   return useQuery({
-    queryKey: [PRODUCTS_QUERY_KEY, apiBaseUrl],
+    queryKey: queryKeys.products.all(apiBaseUrl),
     queryFn: () => fetchProducts(apiBaseUrl),
   });
 }

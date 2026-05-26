@@ -3,13 +3,18 @@ import { memo, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import { DataTable } from "@/components/DataTable";
+import { UserRowActions } from "@/components/UserRowActions";
 import type { User } from "@/types/user";
 
 type UserTableProps = {
+  apiBaseUrl: string;
   users: User[];
 };
 
-export const UserTable = memo(function UserTable({ users }: UserTableProps) {
+export const UserTable = memo(function UserTable({
+  apiBaseUrl,
+  users,
+}: UserTableProps) {
   const getRowId = useCallback((user: User) => user.id, []);
 
   const columns = useMemo<ColumnDef<User, unknown>[]>(
@@ -34,8 +39,15 @@ export const UserTable = memo(function UserTable({ users }: UserTableProps) {
         accessorKey: "role",
         header: "Роль",
       },
+      {
+        id: "actions",
+        header: () => <span className="sr-only">Действия</span>,
+        cell: ({ row }) => (
+          <UserRowActions apiBaseUrl={apiBaseUrl} user={row.original} />
+        ),
+      },
     ],
-    [],
+    [apiBaseUrl],
   );
 
   return (

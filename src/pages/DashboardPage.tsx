@@ -12,15 +12,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { useRefetchAllWithToast } from "@/hooks/useRefetchWithToast";
 import { formatHealthTimestamp, formatUptimeSeconds } from "@/lib/formatHealth";
 
 export const DashboardPage = memo(function DashboardPage() {
-  const apiBaseUrl = useMemo(
-    () => import.meta.env.VITE_API_URL ?? "http://localhost:3000",
-    [],
-  );
+  const apiBaseUrl = useApiBaseUrl();
 
   const {
     usersCount,
@@ -88,7 +86,7 @@ export const DashboardPage = memo(function DashboardPage() {
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
           <Badge variant="secondary">live demo</Badge>
-          <Badge variant="secondary">GET only</Badge>
+          <Badge variant="secondary">Live CRUD demo</Badge>
         </CardContent>
       </Card>
 

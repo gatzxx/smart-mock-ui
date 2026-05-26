@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
@@ -20,13 +21,25 @@ const mockUsers: User[] = [
   },
 ];
 
+const API_BASE_URL = "http://localhost:3000";
+
+function renderUserTable() {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
+
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <UserTable apiBaseUrl={API_BASE_URL} users={mockUsers} />
+      </MemoryRouter>
+    </QueryClientProvider>,
+  );
+}
+
 describe("UserTable", () => {
   it("renders user list with mock data", () => {
-    render(
-      <MemoryRouter>
-        <UserTable users={mockUsers} />
-      </MemoryRouter>,
-    );
+    renderUserTable();
 
     expect(screen.getByTestId("user-table")).toBeInTheDocument();
     expect(screen.getByText("Alice Smith")).toBeInTheDocument();

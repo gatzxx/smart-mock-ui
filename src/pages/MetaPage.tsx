@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { useMeta } from "@/hooks/useMeta";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
 
@@ -36,10 +37,7 @@ const MetaSkeleton = memo(function MetaSkeleton() {
 });
 
 export const MetaPage = memo(function MetaPage() {
-  const apiBaseUrl = useMemo(
-    () => import.meta.env.VITE_API_URL ?? "http://localhost:3000",
-    [],
-  );
+  const apiBaseUrl = useApiBaseUrl();
 
   const { data, isPending, isError, error, refetch } = useMeta(apiBaseUrl);
 

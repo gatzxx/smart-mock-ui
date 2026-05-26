@@ -1,0 +1,98 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { memo, useCallback } from "react";
+import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  userFormSchema,
+  type UserFormValues,
+} from "@/lib/userFormSchema";
+
+type UserFormProps = {
+  defaultValues?: UserFormValues;
+  isSubmitting: boolean;
+  submitLabel: string;
+  onSubmit: (values: UserFormValues) => void;
+};
+
+const EMPTY_FORM_VALUES: UserFormValues = {
+  fullName: "",
+  email: "",
+  role: "",
+};
+
+export const UserForm = memo(function UserForm({
+  defaultValues,
+  isSubmitting,
+  submitLabel,
+  onSubmit,
+}: UserFormProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserFormValues>({
+    defaultValues: defaultValues ?? EMPTY_FORM_VALUES,
+    resolver: zodResolver(userFormSchema),
+  });
+
+  const handleFormSubmit = useCallback(
+    (values: UserFormValues) => {
+      onSubmit(values);
+    },
+    [onSubmit],
+  );
+
+  return (
+    <form
+      className="space-y-4"
+      data-testid="user-form"
+      noValidate
+      onSubmit={handleSubmit(handleFormSubmit)}
+    >
+      <div className="space-y-2">
+        <label className="text-sm font-medium" htmlFor="user-fullName">
+          Имя
+        </label>
+        <Input
+          aria-invalid={Boolean(errors.fullName)}
+          id="user-fullName"
+          {...register("fullName")}
+        />
+        {errors.fullName ? (
+          <p className="text-sm text-destructive">{errors.fullName.message}</p>
+        ) : null}
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium" htmlFor="user-email">
+          Email
+        </label>
+        <Input
+          aria-invalid={Boolean(errors.email)}
+          id="user-email"
+          type="email"
+          {...register("email")}
+        />
+        {errors.email ? (
+          <p className="text-sm text-destructive">{errors.email.message}</p>
+        ) : null}
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium" htmlFor="user-role">
+          Роль
+        </label>
+        <Input id="user-role" {...register("role")} />
+        {errors.role ? (
+          <p className="text-sm text-destructive">{errors.role.message}</p>
+        ) : null}
+      </div>
+
+      <Button disabled={isSubmitting} type="submit">
+        {isSubmitting ? "Сохранение..." : submitLabel}
+      </Button>
+    </form>
+  );
+});

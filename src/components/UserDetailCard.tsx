@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Pencil } from "lucide-react";
 import { memo } from "react";
 import { Link } from "react-router-dom";
 
@@ -41,12 +41,20 @@ export const UserDetailCard = memo(function UserDetailCard({ user }: UserDetailC
           <p className="mb-1 text-sm font-medium text-muted-foreground">О себе</p>
           <p className="text-sm leading-relaxed">{user.bio}</p>
         </div>
-        <Button asChild className="mt-2" variant="outline">
-          <Link to="/users">
-            <ArrowLeft aria-hidden="true" className="size-4" />
-            К списку
-          </Link>
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild variant="outline">
+            <Link to={`/users/${user.id}/edit`}>
+              <Pencil aria-hidden="true" className="size-4" />
+              Изменить
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link to="/users">
+              <ArrowLeft aria-hidden="true" className="size-4" />
+              К списку
+            </Link>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

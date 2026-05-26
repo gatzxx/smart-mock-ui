@@ -6,6 +6,7 @@ import { ApiActivityPanel } from "@/components/ApiActivityPanel";
 import { ApiActivityToggle } from "@/components/ApiActivityToggle";
 import { ApiHealthBadge } from "@/components/ApiHealthBadge";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -17,11 +18,7 @@ const NAV_ITEMS = [
 
 export const AppShell = memo(function AppShell() {
   const [isActivityOpen, setIsActivityOpen] = useState(false);
-
-  const apiBaseUrl = useMemo(
-    () => import.meta.env.VITE_API_URL ?? "http://localhost:3000",
-    [],
-  );
+  const apiBaseUrl = useApiBaseUrl();
 
   const handleActivityToggle = useCallback(() => {
     setIsActivityOpen((currentIsOpen) => !currentIsOpen);

@@ -3,14 +3,19 @@ import { memo, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import { DataTable } from "@/components/DataTable";
+import { ProductRowActions } from "@/components/ProductRowActions";
 import { Badge } from "@/components/ui/badge";
 import type { Product } from "@/types/product";
 
 type ProductTableProps = {
+  apiBaseUrl: string;
   products: Product[];
 };
 
-export const ProductTable = memo(function ProductTable({ products }: ProductTableProps) {
+export const ProductTable = memo(function ProductTable({
+  apiBaseUrl,
+  products,
+}: ProductTableProps) {
   const getRowId = useCallback((product: Product) => product.id, []);
 
   const columns = useMemo<ColumnDef<Product, unknown>[]>(
@@ -42,8 +47,15 @@ export const ProductTable = memo(function ProductTable({ products }: ProductTabl
         sortingFn: (rowA, rowB) =>
           Number(rowB.original.inStock) - Number(rowA.original.inStock),
       },
+      {
+        id: "actions",
+        header: () => <span className="sr-only">Действия</span>,
+        cell: ({ row }) => (
+          <ProductRowActions apiBaseUrl={apiBaseUrl} product={row.original} />
+        ),
+      },
     ],
-    [],
+    [apiBaseUrl],
   );
 
   return (

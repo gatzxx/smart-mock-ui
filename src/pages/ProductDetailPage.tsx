@@ -11,15 +11,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { useProduct } from "@/hooks/useProduct";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
 
 export const ProductDetailPage = memo(function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const apiBaseUrl = useMemo(
-    () => import.meta.env.VITE_API_URL ?? "http://localhost:3000",
-    [],
-  );
+  const apiBaseUrl = useApiBaseUrl();
 
   const { data, isPending, isError, error, refetch } = useProduct(apiBaseUrl, id);
 

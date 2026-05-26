@@ -11,15 +11,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
 import { useUser } from "@/hooks/useUser";
 
 export const UserDetailPage = memo(function UserDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const apiBaseUrl = useMemo(
-    () => import.meta.env.VITE_API_URL ?? "http://localhost:3000",
-    [],
-  );
+  const apiBaseUrl = useApiBaseUrl();
 
   const { data, isPending, isError, error, refetch } = useUser(apiBaseUrl, id);
 

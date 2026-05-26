@@ -1,4 +1,6 @@
+import { Plus } from "lucide-react";
 import { memo, useMemo } from "react";
+import { Link } from "react-router-dom";
 
 import { SearchEmpty } from "@/components/SearchEmpty";
 import { TableSearchField } from "@/components/TableSearchField";
@@ -6,6 +8,8 @@ import { UserTable } from "@/components/UserTable";
 import { UsersEmpty } from "@/components/UsersEmpty";
 import { UsersError } from "@/components/UsersError";
 import { UsersSkeleton } from "@/components/UsersSkeleton";
+import { Button } from "@/components/ui/button";
+import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { useClientSearch } from "@/hooks/useClientSearch";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
 import { useUsers } from "@/hooks/useUsers";
@@ -18,11 +22,7 @@ function getUserSearchText(user: User): string {
 }
 
 export const UsersPage = memo(function UsersPage() {
-  const apiBaseUrl = useMemo(
-    () => import.meta.env.VITE_API_URL ?? "http://localhost:3000",
-    [],
-  );
-
+  const apiBaseUrl = useApiBaseUrl();
   const { data, isPending, isError, error, refetch } = useUsers(apiBaseUrl);
 
   const { query, setQuery, filteredItems } = useClientSearch(
@@ -36,23 +36,57 @@ export const UsersPage = memo(function UsersPage() {
     if (error instanceof Error) {
       return error.message;
     }
+
     return "Не удалось загрузить данные";
   }, [error]);
 
+  const pageHeader = (
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h2 className="text-lg font-semibold tracking-tight">Пользователи</h2>
+        <p className="text-sm text-muted-foreground">
+          CRUD demo: создание, редактирование и удаление через mock API
+        </p>
+      </div>
+      <Button asChild>
+        <Link to="/users/new">
+          <Plus aria-hidden="true" className="size-4" />
+          Пользователь
+        </Link>
+      </Button>
+    </div>
+  );
+
   if (isPending) {
-    return <UsersSkeleton />;
+    return (
+      <div>
+        {pageHeader}
+        <UsersSkeleton />
+      </div>
+    );
   }
 
   if (isError) {
-    return <UsersError message={errorMessage} onRetry={handleRetry} />;
+    return (
+      <div>
+        {pageHeader}
+        <UsersError message={errorMessage} onRetry={handleRetry} />
+      </div>
+    );
   }
 
   if (!data || data.length === 0) {
-    return <UsersEmpty />;
+    return (
+      <div>
+        {pageHeader}
+        <UsersEmpty />
+      </div>
+    );
   }
 
   return (
     <div>
+      {pageHeader}
       <TableSearchField
         placeholder={USERS_SEARCH_PLACEHOLDER}
         testId="users-search"
@@ -66,7 +100,7 @@ export const UsersPage = memo(function UsersPage() {
           title="Ничего не найдено"
         />
       ) : (
-        <UserTable users={filteredItems} />
+        <UserTable apiBaseUrl={apiBaseUrl} users={filteredItems} />
       )}
     </div>
   );
