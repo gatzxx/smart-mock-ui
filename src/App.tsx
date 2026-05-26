@@ -7,6 +7,7 @@ import { DashboardPage } from "@/pages/DashboardPage";
 import { MetaPage } from "@/pages/MetaPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { ProductsPage } from "@/pages/ProductsPage";
+import { ProductDetailPage } from "@/pages/ProductDetailPage";
 import { UserDetailPage } from "@/pages/UserDetailPage";
 
 export const App = memo(function App() {
@@ -17,6 +18,7 @@ export const App = memo(function App() {
         <Route element={<UsersPage />} path="users" />
         <Route element={<UserDetailPage />} path="users/:id" />
         <Route element={<ProductsPage />} path="products" />
+        <Route element={<ProductDetailPage />} path="products/:id" />
         <Route element={<MetaPage />} path="meta" />
         <Route element={<NotFoundPage />} path="*" />
       </Route>

@@ -1,10 +1,11 @@
+import { trackedFetch } from "@/lib/trackedFetch";
 import type { HealthStatus } from "@/types/health";
 
 const HEALTH_PATH = "/api/health";
 
 export async function fetchHealth(apiBaseUrl: string): Promise<HealthStatus> {
   const baseUrl = apiBaseUrl.replace(/\/$/, "");
-  const response = await fetch(`${baseUrl}${HEALTH_PATH}`);
+  const response = await trackedFetch(`${baseUrl}${HEALTH_PATH}`);
 
   if (!response.ok) {
     throw new Error(`Не удалось проверить API (HTTP ${response.status})`);

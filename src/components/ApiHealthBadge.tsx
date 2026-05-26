@@ -1,9 +1,10 @@
 import { Activity, RefreshCw } from "lucide-react";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useMemo } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useHealth } from "@/hooks/useHealth";
+import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
 
 type ApiHealthBadgeProps = {
   apiBaseUrl: string;
@@ -14,9 +15,7 @@ export const ApiHealthBadge = memo(function ApiHealthBadge({
 }: ApiHealthBadgeProps) {
   const { data, isPending, isError, refetch, isFetching } = useHealth(apiBaseUrl);
 
-  const handleRetry = useCallback(() => {
-    void refetch();
-  }, [refetch]);
+  const handleRetry = useRefetchWithToast(refetch);
 
   const badgeContent = useMemo(() => {
     if (isPending) {

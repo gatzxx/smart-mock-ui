@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from "react";
+import { memo, useMemo } from "react";
 
 import { UsersError } from "@/components/UsersError";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useMeta } from "@/hooks/useMeta";
+import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
 
 const MetaSkeleton = memo(function MetaSkeleton() {
   return (
@@ -42,9 +43,7 @@ export const MetaPage = memo(function MetaPage() {
 
   const { data, isPending, isError, error, refetch } = useMeta(apiBaseUrl);
 
-  const handleRetry = useCallback(() => {
-    void refetch();
-  }, [refetch]);
+  const handleRetry = useRefetchWithToast(refetch);
 
   const errorMessage = useMemo(() => {
     if (error instanceof Error) {

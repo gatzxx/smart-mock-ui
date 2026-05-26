@@ -1,10 +1,11 @@
+import { trackedFetch } from "@/lib/trackedFetch";
 import type { ApiMeta } from "@/types/apiMeta";
 
 const META_PATH = "/__meta";
 
 export async function fetchMeta(apiBaseUrl: string): Promise<ApiMeta> {
   const baseUrl = apiBaseUrl.replace(/\/$/, "");
-  const response = await fetch(`${baseUrl}${META_PATH}`);
+  const response = await trackedFetch(`${baseUrl}${META_PATH}`);
 
   if (!response.ok) {
     throw new Error(`Не удалось загрузить meta API (HTTP ${response.status})`);

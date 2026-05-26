@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smart Mock UI</title>
+    <script>
+      (function () {
+        var storageKey = "smart-mock-theme";
+        var storedTheme = localStorage.getItem(storageKey);
+        if (storedTheme === "dark") {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

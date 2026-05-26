@@ -1,8 +1,11 @@
 import { FileJson, LayoutDashboard, Package, Users } from "lucide-react";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 
+import { ApiActivityPanel } from "@/components/ApiActivityPanel";
+import { ApiActivityToggle } from "@/components/ApiActivityToggle";
 import { ApiHealthBadge } from "@/components/ApiHealthBadge";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -13,10 +16,20 @@ const NAV_ITEMS = [
 ] as const;
 
 export const AppShell = memo(function AppShell() {
+  const [isActivityOpen, setIsActivityOpen] = useState(false);
+
   const apiBaseUrl = useMemo(
     () => import.meta.env.VITE_API_URL ?? "http://localhost:3000",
     [],
   );
+
+  const handleActivityToggle = useCallback(() => {
+    setIsActivityOpen((currentIsOpen) => !currentIsOpen);
+  }, []);
+
+  const handleActivityClose = useCallback(() => {
+    setIsActivityOpen(false);
+  }, []);
 
   const navLinkClassName = useCallback(
     ({ isActive }: { isActive: boolean }) =>
@@ -70,6 +83,8 @@ export const AppShell = memo(function AppShell() {
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <ApiHealthBadge apiBaseUrl={apiBaseUrl} />
+              <ApiActivityToggle isOpen={isActivityOpen} onToggle={handleActivityToggle} />
+              <ThemeToggle />
               <Link
                 className="text-sm font-medium text-primary underline-offset-4 hover:underline"
                 to="/meta"
@@ -84,6 +99,7 @@ export const AppShell = memo(function AppShell() {
           >
             {navItems}
           </nav>
+          {isActivityOpen ? <ApiActivityPanel onClose={handleActivityClose} /> : null}
         </header>
 
         <main className="flex-1 p-4 md:p-6">

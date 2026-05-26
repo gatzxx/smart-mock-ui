@@ -4,6 +4,8 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
 import { App } from "./App";
+import { AppProviders } from "./providers/AppProviders";
+import { QUERY_STALE_TIME_MS } from "./constants/query";
 import "./index.css";
 
 const queryClient = new QueryClient({
@@ -11,6 +13,8 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      staleTime: QUERY_STALE_TIME_MS,
     },
   },
 });
@@ -24,9 +28,11 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <AppProviders>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AppProviders>
     </QueryClientProvider>
   </StrictMode>,
 );

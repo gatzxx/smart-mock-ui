@@ -1,3 +1,4 @@
+import { trackedFetch } from "@/lib/trackedFetch";
 import type { UserDetail } from "@/types/userDetail";
 import type { User } from "@/types/user";
 
@@ -5,7 +6,7 @@ const USERS_PATH = "/api/users";
 
 export async function fetchUsers(apiBaseUrl: string): Promise<User[]> {
   const baseUrl = apiBaseUrl.replace(/\/$/, "");
-  const response = await fetch(`${baseUrl}${USERS_PATH}`);
+  const response = await trackedFetch(`${baseUrl}${USERS_PATH}`);
 
   if (!response.ok) {
     throw new Error(`Не удалось загрузить пользователей (HTTP ${response.status})`);
@@ -25,7 +26,7 @@ export async function fetchUser(
   userId: string,
 ): Promise<UserDetail> {
   const baseUrl = apiBaseUrl.replace(/\/$/, "");
-  const response = await fetch(`${baseUrl}${USERS_PATH}/${userId}`);
+  const response = await trackedFetch(`${baseUrl}${USERS_PATH}/${userId}`);
 
   if (response.status === 404) {
     throw new Error("Пользователь не найден");

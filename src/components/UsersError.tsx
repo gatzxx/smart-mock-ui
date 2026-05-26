@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 type UsersErrorProps = {
   message: string;
-  onRetry: () => void;
+  onRetry: () => void | Promise<void>;
 };
 
 export const UsersError = memo(function UsersError({
@@ -14,7 +14,7 @@ export const UsersError = memo(function UsersError({
   onRetry,
 }: UsersErrorProps) {
   const handleRetryClick = useCallback(() => {
-    onRetry();
+    void onRetry();
   }, [onRetry]);
 
   return (

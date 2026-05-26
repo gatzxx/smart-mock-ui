@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from "react";
+import { memo, useMemo } from "react";
 
 import { SearchEmpty } from "@/components/SearchEmpty";
 import { TableSearchField } from "@/components/TableSearchField";
@@ -7,6 +7,7 @@ import { UsersEmpty } from "@/components/UsersEmpty";
 import { UsersError } from "@/components/UsersError";
 import { UsersSkeleton } from "@/components/UsersSkeleton";
 import { useClientSearch } from "@/hooks/useClientSearch";
+import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
 import { useUsers } from "@/hooks/useUsers";
 import type { User } from "@/types/user";
 
@@ -29,9 +30,7 @@ export const UsersPage = memo(function UsersPage() {
     getUserSearchText,
   );
 
-  const handleRetry = useCallback(() => {
-    void refetch();
-  }, [refetch]);
+  const handleRetry = useRefetchWithToast(refetch);
 
   const errorMessage = useMemo(() => {
     if (error instanceof Error) {

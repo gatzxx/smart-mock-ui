@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
 import { ProductTable } from "@/components/ProductTable";
@@ -20,8 +21,12 @@ const mockProducts: Product[] = [
 ];
 
 describe("ProductTable", () => {
-  it("renders product list with stock badges", () => {
-    render(<ProductTable products={mockProducts} />);
+  it("renders product list with stock badges and detail links", () => {
+    render(
+      <MemoryRouter>
+        <ProductTable products={mockProducts} />
+      </MemoryRouter>,
+    );
 
     expect(screen.getByTestId("product-table")).toBeInTheDocument();
     expect(screen.getByText("Wireless Mouse")).toBeInTheDocument();
@@ -29,5 +34,9 @@ describe("ProductTable", () => {
     expect(screen.getByText("В наличии")).toBeInTheDocument();
     expect(screen.getByText("USB Hub")).toBeInTheDocument();
     expect(screen.getByText("Нет в наличии")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Wireless Mouse" })).toHaveAttribute(
+      "href",
+      "/products/1",
+    );
   });
 });

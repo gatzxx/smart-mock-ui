@@ -1,5 +1,5 @@
 import { Activity, Package, Users } from "lucide-react";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useMemo } from "react";
 
 import { DashboardSkeleton } from "@/components/DashboardSkeleton";
 import { DashboardStatCard } from "@/components/DashboardStatCard";
@@ -13,10 +13,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
-
-function formatUptimeSeconds(uptime: number): string {
-  return `${Math.round(uptime)} с`;
-}
+import { useRefetchAllWithToast } from "@/hooks/useRefetchWithToast";
+import { formatHealthTimestamp, formatUptimeSeconds } from "@/lib/formatHealth";
 
 export const DashboardPage = memo(function DashboardPage() {
   const apiBaseUrl = useMemo(
@@ -34,9 +32,7 @@ export const DashboardPage = memo(function DashboardPage() {
     refetchAll,
   } = useDashboardStats(apiBaseUrl);
 
-  const handleRetry = useCallback(() => {
-    refetchAll();
-  }, [refetchAll]);
+  const handleRetry = useRefetchAllWithToast(refetchAll);
 
   const errorMessage = useMemo(() => {
     if (error instanceof Error) {
@@ -67,7 +63,7 @@ export const DashboardPage = memo(function DashboardPage() {
     }
 
     if (healthQuery.data?.status === "ok") {
-      return `Uptime: ${formatUptimeSeconds(healthQuery.data.uptime)} · ${healthQuery.data.timestamp}`;
+      return `Uptime: ${formatUptimeSeconds(healthQuery.data.uptime)} · ${formatHealthTimestamp(healthQuery.data.timestamp)}`;
     }
 
     return "Статус API отличен от ok.";

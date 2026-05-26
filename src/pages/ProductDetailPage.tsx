@@ -2,8 +2,8 @@ import { memo, useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/Breadcrumbs";
-import { UserDetailCard } from "@/components/UserDetailCard";
-import { UserDetailSkeleton } from "@/components/UserDetailSkeleton";
+import { ProductDetailCard } from "@/components/ProductDetailCard";
+import { ProductDetailSkeleton } from "@/components/ProductDetailSkeleton";
 import { UsersError } from "@/components/UsersError";
 import {
   Card,
@@ -11,17 +11,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useProduct } from "@/hooks/useProduct";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
-import { useUser } from "@/hooks/useUser";
 
-export const UserDetailPage = memo(function UserDetailPage() {
+export const ProductDetailPage = memo(function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const apiBaseUrl = useMemo(
     () => import.meta.env.VITE_API_URL ?? "http://localhost:3000",
     [],
   );
 
-  const { data, isPending, isError, error, refetch } = useUser(apiBaseUrl, id);
+  const { data, isPending, isError, error, refetch } = useProduct(apiBaseUrl, id);
 
   const handleRetry = useRefetchWithToast(refetch);
 
@@ -33,7 +33,7 @@ export const UserDetailPage = memo(function UserDetailPage() {
   }, [error]);
 
   const breadcrumbItems = useMemo((): BreadcrumbItem[] => {
-    const items: BreadcrumbItem[] = [{ label: "Пользователи", href: "/users" }];
+    const items: BreadcrumbItem[] = [{ label: "Товары", href: "/products" }];
 
     if (isPending) {
       items.push({ label: "Загрузка..." });
@@ -41,25 +41,25 @@ export const UserDetailPage = memo(function UserDetailPage() {
     }
 
     if (data) {
-      items.push({ label: data.fullName });
+      items.push({ label: data.title });
       return items;
     }
 
-    items.push({ label: id ?? "User" });
+    items.push({ label: id ?? "Product" });
     return items;
   }, [data, id, isPending]);
 
   const breadcrumbNav = (
-    <Breadcrumbs items={breadcrumbItems} testId="user-detail-breadcrumbs" />
+    <Breadcrumbs items={breadcrumbItems} testId="product-detail-breadcrumbs" />
   );
 
   if (!id) {
     return (
       <div>
         {breadcrumbNav}
-        <Card data-testid="user-detail-not-found">
+        <Card data-testid="product-detail-not-found">
           <CardHeader className="text-center">
-            <CardTitle>Пользователь не найден</CardTitle>
+            <CardTitle>Товар не найден</CardTitle>
             <CardDescription>Некорректный идентификатор в URL.</CardDescription>
           </CardHeader>
         </Card>
@@ -71,7 +71,7 @@ export const UserDetailPage = memo(function UserDetailPage() {
     return (
       <div>
         {breadcrumbNav}
-        <UserDetailSkeleton />
+        <ProductDetailSkeleton />
       </div>
     );
   }
@@ -83,9 +83,9 @@ export const UserDetailPage = memo(function UserDetailPage() {
       return (
         <div>
           {breadcrumbNav}
-          <Card data-testid="user-detail-not-found">
+          <Card data-testid="product-detail-not-found">
             <CardHeader className="text-center">
-              <CardTitle>Пользователь не найден</CardTitle>
+              <CardTitle>Товар не найден</CardTitle>
               <CardDescription>Запись с id {id} недоступна.</CardDescription>
             </CardHeader>
           </Card>
@@ -105,9 +105,9 @@ export const UserDetailPage = memo(function UserDetailPage() {
     return (
       <div>
         {breadcrumbNav}
-        <Card data-testid="user-detail-not-found">
+        <Card data-testid="product-detail-not-found">
           <CardHeader className="text-center">
-            <CardTitle>Пользователь не найден</CardTitle>
+            <CardTitle>Товар не найден</CardTitle>
             <CardDescription>Данные отсутствуют.</CardDescription>
           </CardHeader>
         </Card>
@@ -118,7 +118,7 @@ export const UserDetailPage = memo(function UserDetailPage() {
   return (
     <div>
       {breadcrumbNav}
-      <UserDetailCard user={data} />
+      <ProductDetailCard product={data} />
     </div>
   );
 });

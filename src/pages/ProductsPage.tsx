@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from "react";
+import { memo, useMemo } from "react";
 
 import { ProductTable } from "@/components/ProductTable";
 import { ProductsEmpty } from "@/components/ProductsEmpty";
@@ -7,6 +7,7 @@ import { SearchEmpty } from "@/components/SearchEmpty";
 import { TableSearchField } from "@/components/TableSearchField";
 import { UsersError } from "@/components/UsersError";
 import { useClientSearch } from "@/hooks/useClientSearch";
+import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
 import { useProducts } from "@/hooks/useProducts";
 import type { Product } from "@/types/product";
 
@@ -30,9 +31,7 @@ export const ProductsPage = memo(function ProductsPage() {
     getProductSearchText,
   );
 
-  const handleRetry = useCallback(() => {
-    void refetch();
-  }, [refetch]);
+  const handleRetry = useRefetchWithToast(refetch);
 
   const errorMessage = useMemo(() => {
     if (error instanceof Error) {

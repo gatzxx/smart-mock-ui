@@ -24,10 +24,12 @@ export function useDashboardStats(apiBaseUrl: string) {
     [productsQuery.error, usersQuery.error],
   );
 
-  const refetchAll = useCallback(() => {
-    void usersQuery.refetch();
-    void productsQuery.refetch();
-    void healthQuery.refetch();
+  const refetchAll = useCallback(async () => {
+    return Promise.all([
+      usersQuery.refetch(),
+      productsQuery.refetch(),
+      healthQuery.refetch(),
+    ]);
   }, [healthQuery, productsQuery, usersQuery]);
 
   return {

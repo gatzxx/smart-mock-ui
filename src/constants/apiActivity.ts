@@ -1,0 +1,1 @@
+export const API_ACTIVITY_MAX_ENTRIES = 20;
