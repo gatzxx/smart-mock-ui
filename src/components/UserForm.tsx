@@ -56,12 +56,15 @@ export const UserForm = memo(function UserForm({
           Имя
         </label>
         <Input
+          aria-describedby={errors.fullName ? "user-fullName-error" : undefined}
           aria-invalid={Boolean(errors.fullName)}
           id="user-fullName"
           {...register("fullName")}
         />
         {errors.fullName ? (
-          <p className="text-sm text-destructive">{errors.fullName.message}</p>
+          <p className="text-sm text-destructive" id="user-fullName-error" role="alert">
+            {errors.fullName.message}
+          </p>
         ) : null}
       </div>
 
@@ -70,13 +73,16 @@ export const UserForm = memo(function UserForm({
           Email
         </label>
         <Input
+          aria-describedby={errors.email ? "user-email-error" : undefined}
           aria-invalid={Boolean(errors.email)}
           id="user-email"
           type="email"
           {...register("email")}
         />
         {errors.email ? (
-          <p className="text-sm text-destructive">{errors.email.message}</p>
+          <p className="text-sm text-destructive" id="user-email-error" role="alert">
+            {errors.email.message}
+          </p>
         ) : null}
       </div>
 
@@ -84,9 +90,16 @@ export const UserForm = memo(function UserForm({
         <label className="text-sm font-medium" htmlFor="user-role">
           Роль
         </label>
-        <Input id="user-role" {...register("role")} />
+        <Input
+          aria-describedby={errors.role ? "user-role-error" : undefined}
+          aria-invalid={Boolean(errors.role)}
+          id="user-role"
+          {...register("role")}
+        />
         {errors.role ? (
-          <p className="text-sm text-destructive">{errors.role.message}</p>
+          <p className="text-sm text-destructive" id="user-role-error" role="alert">
+            {errors.role.message}
+          </p>
         ) : null}
       </div>
 

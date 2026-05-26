@@ -1,3 +1,10 @@
+import {
+  ensureOkResponse,
+  normalizeBaseUrl,
+  parseListResponse,
+  parseObjectResponse,
+} from "@/lib/apiClient";
+import { productDetailSchema, productSchema } from "@/lib/schemas/productSchemas";
 import { trackedFetch } from "@/lib/trackedFetch";
 import type { Product } from "@/types/product";
 import type { ProductDetail } from "@/types/productDetail";
@@ -12,42 +19,15 @@ export type CreateProductInput = {
 
 export type UpdateProductInput = CreateProductInput;
 
-function normalizeBaseUrl(apiBaseUrl: string): string {
-  return apiBaseUrl.replace(/\/$/, "");
-}
-
-async function parseObjectResponse(
-  response: Response,
-  errorMessage: string,
-): Promise<Record<string, unknown>> {
-  if (!response.ok) {
-    throw new Error(`${errorMessage} (HTTP ${response.status})`);
-  }
-
-  const data: unknown = await response.json();
-
-  if (typeof data !== "object" || data === null) {
-    throw new Error("Некорректный ответ API: ожидался объект");
-  }
-
-  return data as Record<string, unknown>;
-}
-
 export async function fetchProducts(apiBaseUrl: string): Promise<Product[]> {
   const baseUrl = normalizeBaseUrl(apiBaseUrl);
   const response = await trackedFetch(`${baseUrl}${PRODUCTS_PATH}`);
 
-  if (!response.ok) {
-    throw new Error(`Не удалось загрузить товары (HTTP ${response.status})`);
-  }
-
-  const data: unknown = await response.json();
-
-  if (!Array.isArray(data)) {
-    throw new Error("Некорректный ответ API: ожидался массив");
-  }
-
-  return data as Product[];
+  return parseListResponse(
+    response,
+    productSchema,
+    "Не удалось загрузить товары",
+  );
 }
 
 export async function fetchProduct(
@@ -57,17 +37,12 @@ export async function fetchProduct(
   const baseUrl = normalizeBaseUrl(apiBaseUrl);
   const response = await trackedFetch(`${baseUrl}${PRODUCTS_PATH}/${productId}`);
 
-  if (response.status === 404) {
-    throw new Error("Товар не найден");
-  }
-
-  if (!response.ok) {
-    throw new Error(`Не удалось загрузить товар (HTTP ${response.status})`);
-  }
-
-  const data = await parseObjectResponse(response, "Не удалось загрузить товар");
-
-  return data as ProductDetail;
+  return parseObjectResponse(
+    response,
+    productDetailSchema,
+    "Не удалось загрузить товар",
+    "Товар не найден",
+  );
 }
 
 export async function createProduct(
@@ -81,9 +56,11 @@ export async function createProduct(
     body: JSON.stringify(input),
   });
 
-  const data = await parseObjectResponse(response, "Не удалось создать товар");
-
-  return data as Product;
+  return parseObjectResponse(
+    response,
+    productSchema,
+    "Не удалось создать товар",
+  );
 }
 
 export async function updateProduct(
@@ -98,13 +75,12 @@ export async function updateProduct(
     body: JSON.stringify(input),
   });
 
-  if (response.status === 404) {
-    throw new Error("Товар не найден");
-  }
-
-  const data = await parseObjectResponse(response, "Не удалось обновить товар");
-
-  return data as ProductDetail;
+  return parseObjectResponse(
+    response,
+    productDetailSchema,
+    "Не удалось обновить товар",
+    "Товар не найден",
+  );
 }
 
 export async function deleteProduct(
@@ -116,11 +92,9 @@ export async function deleteProduct(
     method: "DELETE",
   });
 
-  if (response.status === 404) {
-    throw new Error("Товар не найден");
-  }
-
-  if (!response.ok) {
-    throw new Error(`Не удалось удалить товар (HTTP ${response.status})`);
-  }
+  await ensureOkResponse(
+    response,
+    "Не удалось удалить товар",
+    "Товар не найден",
+  );
 }

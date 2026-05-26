@@ -1,7 +1,1 @@
-export type User = {
-  id: string;
-  fullName: string;
-  email: string;
-  role: string;
-  createdAt?: string;
-};
+export type { User } from "@/lib/schemas/userSchemas";

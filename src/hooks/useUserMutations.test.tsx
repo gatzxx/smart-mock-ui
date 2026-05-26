@@ -63,6 +63,7 @@ describe("useUserMutations", () => {
 
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ["users", API_BASE_URL],
+      refetchType: "all",
     });
     expect(toast.success).toHaveBeenCalledWith("Пользователь создан");
   });

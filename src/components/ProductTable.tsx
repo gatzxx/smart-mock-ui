@@ -60,6 +60,7 @@ export const ProductTable = memo(function ProductTable({
 
   return (
     <DataTable
+      caption="Список товаров"
       columns={columns}
       data={products}
       getRowId={getRowId}

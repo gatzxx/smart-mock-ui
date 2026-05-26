@@ -42,7 +42,7 @@ export const ProductCreatePage = memo(function ProductCreatePage() {
         <CardHeader>
           <CardTitle>Новый товар</CardTitle>
           <CardDescription>
-            POST /api/products : запись попадёт в in-memory store mock API
+            POST /api/products: запись попадёт в in-memory store mock API
           </CardDescription>
         </CardHeader>
         <CardContent>

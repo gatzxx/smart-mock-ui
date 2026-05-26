@@ -22,6 +22,7 @@ import {
 import { TABLE_PAGE_SIZE } from "@/constants/table";
 
 type DataTableProps<TData> = {
+  caption: string;
   columns: ColumnDef<TData, unknown>[];
   data: TData[];
   getRowId?: (row: TData) => string;
@@ -29,7 +30,27 @@ type DataTableProps<TData> = {
   pageSize?: number;
 };
 
+type SortableHeader = {
+  column: {
+    columnDef: {
+      header?: unknown;
+    };
+    id: string;
+  };
+};
+
+function getColumnHeaderLabel(header: SortableHeader): string {
+  const headerDefinition = header.column.columnDef.header;
+
+  if (typeof headerDefinition === "string") {
+    return headerDefinition;
+  }
+
+  return header.column.id;
+}
+
 function DataTableInner<TData>({
+  caption,
   columns,
   data,
   getRowId,
@@ -72,11 +93,13 @@ function DataTableInner<TData>({
       {headerGroup.headers.map((header) => {
         const canSort = header.column.getCanSort();
         const sortDirection = header.column.getIsSorted();
+        const headerLabel = getColumnHeaderLabel(header);
 
         return (
-          <TableHead key={header.id}>
+          <TableHead key={header.id} scope="col">
             {header.isPlaceholder ? null : canSort ? (
               <button
+                aria-label={`Сортировать: ${headerLabel}`}
                 className="inline-flex items-center gap-1 font-medium text-muted-foreground transition-colors hover:text-foreground"
                 type="button"
                 onClick={header.column.getToggleSortingHandler()}
@@ -117,6 +140,7 @@ function DataTableInner<TData>({
   return (
     <div className="space-y-4">
       <Table data-testid={testId}>
+        <caption className="sr-only">{caption}</caption>
         <TableHeader>{headerGroups}</TableHeader>
         <TableBody>{rows}</TableBody>
       </Table>
@@ -127,6 +151,7 @@ function DataTableInner<TData>({
         </p>
         <div className="flex gap-2">
           <Button
+            aria-label="Предыдущая страница"
             disabled={!table.getCanPreviousPage()}
             size="sm"
             type="button"
@@ -136,6 +161,7 @@ function DataTableInner<TData>({
             Назад
           </Button>
           <Button
+            aria-label="Следующая страница"
             disabled={!table.getCanNextPage()}
             size="sm"
             type="button"

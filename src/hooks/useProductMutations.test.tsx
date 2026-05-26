@@ -61,8 +61,15 @@ describe("useProductMutations", () => {
       expect(createProduct).toHaveBeenCalled();
     });
 
+    const productsQueryKey = ["products", API_BASE_URL] as const;
+    const cachedProducts = queryClient.getQueryData(productsQueryKey);
+
+    expect(cachedProducts).toEqual([
+      expect.objectContaining({ id: "product-1", title: "Wireless Mouse" }),
+    ]);
     expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: ["products", API_BASE_URL],
+      queryKey: productsQueryKey,
+      refetchType: "all",
     });
     expect(toast.success).toHaveBeenCalledWith("Товар создан");
   });

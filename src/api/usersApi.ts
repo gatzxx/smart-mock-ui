@@ -1,4 +1,11 @@
 import { trackedFetch } from "@/lib/trackedFetch";
+import {
+  normalizeBaseUrl,
+  parseListResponse,
+  parseObjectResponse,
+  ensureOkResponse,
+} from "@/lib/apiClient";
+import { userDetailSchema, userSchema } from "@/lib/schemas/userSchemas";
 import type { UserDetail } from "@/types/userDetail";
 import type { User } from "@/types/user";
 
@@ -12,42 +19,15 @@ export type CreateUserInput = {
 
 export type UpdateUserInput = CreateUserInput;
 
-function normalizeBaseUrl(apiBaseUrl: string): string {
-  return apiBaseUrl.replace(/\/$/, "");
-}
-
-async function parseObjectResponse(
-  response: Response,
-  errorMessage: string,
-): Promise<Record<string, unknown>> {
-  if (!response.ok) {
-    throw new Error(`${errorMessage} (HTTP ${response.status})`);
-  }
-
-  const data: unknown = await response.json();
-
-  if (typeof data !== "object" || data === null) {
-    throw new Error("Некорректный ответ API: ожидался объект");
-  }
-
-  return data as Record<string, unknown>;
-}
-
 export async function fetchUsers(apiBaseUrl: string): Promise<User[]> {
   const baseUrl = normalizeBaseUrl(apiBaseUrl);
   const response = await trackedFetch(`${baseUrl}${USERS_PATH}`);
 
-  if (!response.ok) {
-    throw new Error(`Не удалось загрузить пользователей (HTTP ${response.status})`);
-  }
-
-  const data: unknown = await response.json();
-
-  if (!Array.isArray(data)) {
-    throw new Error("Некорректный ответ API: ожидался массив");
-  }
-
-  return data as User[];
+  return parseListResponse(
+    response,
+    userSchema,
+    "Не удалось загрузить пользователей",
+  );
 }
 
 export async function fetchUser(
@@ -57,20 +37,12 @@ export async function fetchUser(
   const baseUrl = normalizeBaseUrl(apiBaseUrl);
   const response = await trackedFetch(`${baseUrl}${USERS_PATH}/${userId}`);
 
-  if (response.status === 404) {
-    throw new Error("Пользователь не найден");
-  }
-
-  if (!response.ok) {
-    throw new Error(`Не удалось загрузить пользователя (HTTP ${response.status})`);
-  }
-
-  const data = await parseObjectResponse(
+  return parseObjectResponse(
     response,
+    userDetailSchema,
     "Не удалось загрузить пользователя",
+    "Пользователь не найден",
   );
-
-  return data as UserDetail;
 }
 
 export async function createUser(
@@ -84,12 +56,11 @@ export async function createUser(
     body: JSON.stringify(input),
   });
 
-  const data = await parseObjectResponse(
+  return parseObjectResponse(
     response,
+    userSchema,
     "Не удалось создать пользователя",
   );
-
-  return data as User;
 }
 
 export async function updateUser(
@@ -104,16 +75,12 @@ export async function updateUser(
     body: JSON.stringify(input),
   });
 
-  if (response.status === 404) {
-    throw new Error("Пользователь не найден");
-  }
-
-  const data = await parseObjectResponse(
+  return parseObjectResponse(
     response,
+    userDetailSchema,
     "Не удалось обновить пользователя",
+    "Пользователь не найден",
   );
-
-  return data as UserDetail;
 }
 
 export async function deleteUser(
@@ -125,11 +92,9 @@ export async function deleteUser(
     method: "DELETE",
   });
 
-  if (response.status === 404) {
-    throw new Error("Пользователь не найден");
-  }
-
-  if (!response.ok) {
-    throw new Error(`Не удалось удалить пользователя (HTTP ${response.status})`);
-  }
+  await ensureOkResponse(
+    response,
+    "Не удалось удалить пользователя",
+    "Пользователь не найден",
+  );
 }

@@ -144,7 +144,7 @@ export const ProductEditPage = memo(function ProductEditPage() {
         <CardHeader>
           <CardTitle>Редактирование</CardTitle>
           <CardDescription>
-            PATCH /api/products/{id} : изменения сохраняются в store mock API
+            PATCH /api/products/{id}: изменения сохраняются в store mock API
           </CardDescription>
         </CardHeader>
         <CardContent>

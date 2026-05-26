@@ -23,7 +23,11 @@ describe("UserForm", () => {
     await user.type(screen.getByLabelText("Email"), "invalid-email");
     await user.click(screen.getByRole("button", { name: "Создать" }));
 
+    const emailInput = screen.getByLabelText("Email");
+
     expect(await screen.findByText("Некорректный email")).toBeInTheDocument();
+    expect(emailInput).toHaveAttribute("aria-invalid", "true");
+    expect(emailInput).toHaveAttribute("aria-describedby", "user-email-error");
     expect(handleSubmit).not.toHaveBeenCalled();
   });
 

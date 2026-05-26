@@ -42,7 +42,7 @@ export const UserCreatePage = memo(function UserCreatePage() {
         <CardHeader>
           <CardTitle>Новый пользователь</CardTitle>
           <CardDescription>
-            POST /api/users : запись попадёт в in-memory store mock API
+            POST /api/users: запись попадёт в in-memory store mock API
           </CardDescription>
         </CardHeader>
         <CardContent>

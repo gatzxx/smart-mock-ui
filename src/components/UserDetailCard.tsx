@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
 import type { UserDetail } from "@/types/userDetail";
 
@@ -20,11 +21,7 @@ export const UserDetailCard = memo(function UserDetailCard({ user }: UserDetailC
   return (
     <Card data-testid="user-detail-card">
       <CardHeader className="flex flex-row items-start gap-4">
-        <img
-          alt=""
-          className="size-16 rounded-full border border-border object-cover"
-          src={user.avatar}
-        />
+        <UserAvatar alt={user.fullName} fullName={user.fullName} src={user.avatar} />
         <div className="min-w-0 flex-1 space-y-1">
           <CardTitle>{user.fullName}</CardTitle>
           <CardDescription>{user.email}</CardDescription>

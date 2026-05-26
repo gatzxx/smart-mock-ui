@@ -3,15 +3,21 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { THEME_STORAGE_KEY } from "@/constants/theme";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 describe("ThemeToggle", () => {
   afterEach(() => {
     document.documentElement.classList.remove("dark");
+    document.documentElement.style.colorScheme = "light";
     window.localStorage.removeItem(THEME_STORAGE_KEY);
   });
 
   it("toggles dark theme class and persists choice", () => {
-    render(<ThemeToggle />);
+    render(
+      <ThemeProvider>
+        <ThemeToggle />
+      </ThemeProvider>,
+    );
 
     expect(document.documentElement.classList.contains("dark")).toBe(false);
 

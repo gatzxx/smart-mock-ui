@@ -5,3 +5,5 @@ export const USER_DELETED_TOAST_MESSAGE = "Пользователь удалён
 export const PRODUCT_CREATED_TOAST_MESSAGE = "Товар создан";
 export const PRODUCT_UPDATED_TOAST_MESSAGE = "Товар обновлён";
 export const PRODUCT_DELETED_TOAST_MESSAGE = "Товар удалён";
+
+export const CURL_COPIED_TOAST_MESSAGE = "curl скопирован";

@@ -10,6 +10,9 @@
         var storedTheme = localStorage.getItem(storageKey);
         if (storedTheme === "dark") {
           document.documentElement.classList.add("dark");
+          document.documentElement.style.colorScheme = "dark";
+        } else {
+          document.documentElement.style.colorScheme = "light";
         }
       })();
     </script>

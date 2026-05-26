@@ -1,5 +1,7 @@
 import { memo, useMemo } from "react";
 
+import { MetaEndpointRow } from "@/components/MetaEndpointRow";
+import { OpenApiPreview } from "@/components/OpenApiPreview";
 import { UsersError } from "@/components/UsersError";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -13,7 +15,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -21,6 +22,7 @@ import {
 import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { useMeta } from "@/hooks/useMeta";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
+import { normalizeMetaRoutes } from "@/lib/metaCurl";
 
 const MetaSkeleton = memo(function MetaSkeleton() {
   return (
@@ -38,7 +40,6 @@ const MetaSkeleton = memo(function MetaSkeleton() {
 
 export const MetaPage = memo(function MetaPage() {
   const apiBaseUrl = useApiBaseUrl();
-
   const { data, isPending, isError, error, refetch } = useMeta(apiBaseUrl);
 
   const handleRetry = useRefetchWithToast(refetch);
@@ -47,8 +48,17 @@ export const MetaPage = memo(function MetaPage() {
     if (error instanceof Error) {
       return error.message;
     }
+
     return "Не удалось загрузить данные";
   }, [error]);
+
+  const routes = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+
+    return normalizeMetaRoutes(data);
+  }, [data]);
 
   if (isPending) {
     return <MetaSkeleton />;
@@ -68,35 +78,50 @@ export const MetaPage = memo(function MetaPage() {
         <CardHeader>
           <CardTitle>Meta API</CardTitle>
           <CardDescription>
-            Discovery-эндпoинт mock-api:{" "}
+            Discovery endpoint mock-api:{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs">GET /__meta</code>
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
           <Badge variant="secondary">basePath: {data.basePath}</Badge>
-          <Badge variant="secondary">задержка: {data.responseDelayMs} мс</Badge>
-          <Badge variant="secondary">{data.endpoints.length} эндпoинтов</Badge>
+          <Badge variant="secondary">delay: {data.responseDelayMs} ms</Badge>
+          <Badge variant="secondary">{routes.length} routes</Badge>
+          {data.schemaVersion !== undefined ? (
+            <Badge variant="secondary">schemaVersion: {data.schemaVersion}</Badge>
+          ) : null}
         </CardContent>
       </Card>
 
-      <Table data-testid="meta-endpoints-table">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Эндпoинт</TableHead>
-            <TableHead>Метод</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.endpoints.map((endpoint) => (
-            <TableRow key={endpoint}>
-              <TableCell className="font-mono text-xs">{endpoint}</TableCell>
-              <TableCell>
-                <Badge>GET</Badge>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      {data.openapiPath ? (
+        <OpenApiPreview apiBaseUrl={apiBaseUrl} openapiPath={data.openapiPath} />
+      ) : null}
+
+      <Card data-testid="meta-endpoints-table">
+        <CardHeader>
+          <CardTitle className="text-base">Routes</CardTitle>
+          <CardDescription>Method, path and curl copy per endpoint</CardDescription>
+        </CardHeader>
+        <CardContent className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Path</TableHead>
+                <TableHead>Method</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {routes.map((route) => (
+                <MetaEndpointRow
+                  key={`${route.method}-${route.path}`}
+                  apiBaseUrl={apiBaseUrl}
+                  route={route}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 });

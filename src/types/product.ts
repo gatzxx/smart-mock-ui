@@ -1,7 +1,1 @@
-export type Product = {
-  id: string;
-  title: string;
-  price: string;
-  inStock: boolean;
-  updatedAt?: string;
-};
+export type { Product } from "@/lib/schemas/productSchemas";

@@ -25,9 +25,13 @@ describe("ProductForm", () => {
     await user.type(screen.getByLabelText("Цена"), "0");
     await user.click(screen.getByRole("button", { name: "Создать" }));
 
+    const priceInput = screen.getByLabelText("Цена");
+
     expect(
       await screen.findByText("Цена должна быть больше 0"),
     ).toBeInTheDocument();
+    expect(priceInput).toHaveAttribute("aria-invalid", "true");
+    expect(priceInput).toHaveAttribute("aria-describedby", "product-price-error");
     expect(handleSubmit).not.toHaveBeenCalled();
   });
 

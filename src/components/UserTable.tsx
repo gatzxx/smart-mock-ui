@@ -51,6 +51,12 @@ export const UserTable = memo(function UserTable({
   );
 
   return (
-    <DataTable columns={columns} data={users} getRowId={getRowId} testId="user-table" />
+    <DataTable
+      caption="Список пользователей"
+      columns={columns}
+      data={users}
+      getRowId={getRowId}
+      testId="user-table"
+    />
   );
 });

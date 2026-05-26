@@ -7,5 +7,6 @@ export function useProducts(apiBaseUrl: string) {
   return useQuery({
     queryKey: queryKeys.products.all(apiBaseUrl),
     queryFn: () => fetchProducts(apiBaseUrl),
+    refetchOnMount: true,
   });
 }

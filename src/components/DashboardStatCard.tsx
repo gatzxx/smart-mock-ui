@@ -30,7 +30,7 @@ export const DashboardStatCard = memo(function DashboardStatCard({
 }: DashboardStatCardProps) {
   const card = (
     <Card
-      className={cn(href && "transition-colors hover:bg-accent/40")}
+      className={cn(href && "hover:bg-accent/40")}
       data-testid={testId}
     >
       <CardHeader className="flex flex-row items-start justify-between gap-3">

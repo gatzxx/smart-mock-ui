@@ -7,14 +7,17 @@
 
 ## Live Demo
 
-**https://smart-mock-ui.vercel.app**
+**[Открыть demo →](https://smart-mock-ui.vercel.app)**
 
-| Ресурс | API |
+| Ресурс | URL |
 |--------|-----|
 | Dashboard | https://smart-mock-ui.vercel.app/ |
-| Пользователи | https://smart-mock-api.onrender.com/api/users |
-| Товары | https://smart-mock-api.onrender.com/api/products |
+| API users | https://smart-mock-api.onrender.com/api/users |
 | Meta | https://smart-mock-api.onrender.com/__meta |
+
+![Dashboard demo](docs/demo.png)
+
+> Скриншот статичный. Актуальная версия всегда на live-ссылке выше.
 
 ## Страницы
 

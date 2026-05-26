@@ -4,7 +4,10 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
 import { App } from "./App";
+import { AppErrorBoundary } from "./components/AppErrorBoundary";
+import { ThemedToaster } from "./components/ThemedToaster";
 import { AppProviders } from "./providers/AppProviders";
+import { ThemeProvider } from "./providers/ThemeProvider";
 import { QUERY_STALE_TIME_MS } from "./constants/query";
 import "./index.css";
 
@@ -28,11 +31,16 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <AppProviders>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </AppProviders>
+      <ThemeProvider>
+        <AppProviders>
+          <BrowserRouter>
+            <AppErrorBoundary>
+              <App />
+            </AppErrorBoundary>
+          </BrowserRouter>
+        </AppProviders>
+        <ThemedToaster />
+      </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>,
 );

@@ -56,12 +56,15 @@ export const ProductForm = memo(function ProductForm({
           Название
         </label>
         <Input
+          aria-describedby={errors.title ? "product-title-error" : undefined}
           aria-invalid={Boolean(errors.title)}
           id="product-title"
           {...register("title")}
         />
         {errors.title ? (
-          <p className="text-sm text-destructive">{errors.title.message}</p>
+          <p className="text-sm text-destructive" id="product-title-error" role="alert">
+            {errors.title.message}
+          </p>
         ) : null}
       </div>
 
@@ -70,6 +73,7 @@ export const ProductForm = memo(function ProductForm({
           Цена
         </label>
         <Input
+          aria-describedby={errors.price ? "product-price-error" : undefined}
           aria-invalid={Boolean(errors.price)}
           id="product-price"
           min="0"
@@ -78,7 +82,9 @@ export const ProductForm = memo(function ProductForm({
           {...register("price", { valueAsNumber: true })}
         />
         {errors.price ? (
-          <p className="text-sm text-destructive">{errors.price.message}</p>
+          <p className="text-sm text-destructive" id="product-price-error" role="alert">
+            {errors.price.message}
+          </p>
         ) : null}
       </div>
 
