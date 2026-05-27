@@ -17,9 +17,9 @@ describe("metaCurl", () => {
   });
 
   it("builds DELETE curl command", () => {
-    expect(
-      buildCurlCommand("http://localhost:3000", "DELETE", "/api/users/1"),
-    ).toBe('curl -X DELETE "http://localhost:3000/api/users/1"');
+    expect(buildCurlCommand("http://localhost:3000", "DELETE", "/api/users/1")).toBe(
+      'curl -X DELETE "http://localhost:3000/api/users/1"',
+    );
   });
 
   it("normalizes routes from meta payload", () => {
@@ -43,8 +43,6 @@ describe("metaCurl", () => {
       responseDelayMs: 0,
     };
 
-    expect(normalizeMetaRoutes(meta)).toEqual([
-      { method: "GET", path: "/api/health" },
-    ]);
+    expect(normalizeMetaRoutes(meta)).toEqual([{ method: "GET", path: "/api/health" }]);
   });
 });

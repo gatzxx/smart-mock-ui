@@ -26,7 +26,10 @@ export const DashboardSkeleton = memo(function DashboardSkeleton() {
   );
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-testid="dashboard-skeleton">
+    <div
+      className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      data-testid="dashboard-skeleton"
+    >
       {cards}
     </div>
   );

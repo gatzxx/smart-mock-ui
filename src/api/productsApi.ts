@@ -23,11 +23,7 @@ export async function fetchProducts(apiBaseUrl: string): Promise<Product[]> {
   const baseUrl = normalizeBaseUrl(apiBaseUrl);
   const response = await trackedFetch(`${baseUrl}${PRODUCTS_PATH}`);
 
-  return parseListResponse(
-    response,
-    productSchema,
-    "Не удалось загрузить товары",
-  );
+  return parseListResponse(response, productSchema, "Не удалось загрузить товары");
 }
 
 export async function fetchProduct(
@@ -56,11 +52,7 @@ export async function createProduct(
     body: JSON.stringify(input),
   });
 
-  return parseObjectResponse(
-    response,
-    productSchema,
-    "Не удалось создать товар",
-  );
+  return parseObjectResponse(response, productSchema, "Не удалось создать товар");
 }
 
 export async function updateProduct(
@@ -92,9 +84,5 @@ export async function deleteProduct(
     method: "DELETE",
   });
 
-  await ensureOkResponse(
-    response,
-    "Не удалось удалить товар",
-    "Товар не найден",
-  );
+  await ensureOkResponse(response, "Не удалось удалить товар", "Товар не найден");
 }

@@ -38,9 +38,7 @@ const API_BASE_URL = "http://localhost:3000";
 
 function createWrapper(queryClient: QueryClient) {
   return function Wrapper({ children }: { children: ReactNode }) {
-    return (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    );
+    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
   };
 }
 
@@ -121,7 +119,9 @@ describe("CRUD list cache flow", () => {
     });
 
     const cachedProducts = queryClient.getQueryData<Product[]>(productsQueryKey);
-    const updatedProduct = cachedProducts?.find((product) => product.id === "product-1");
+    const updatedProduct = cachedProducts?.find(
+      (product) => product.id === "product-1",
+    );
 
     expect(updatedProduct?.title).toBe("After");
     expect(updatedProduct?.inStock).toBe(false);

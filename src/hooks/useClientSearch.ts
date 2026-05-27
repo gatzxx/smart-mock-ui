@@ -1,9 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-export function useClientSearch<T>(
-  items: T[],
-  getSearchText: (item: T) => string,
-) {
+export function useClientSearch<T>(items: T[], getSearchText: (item: T) => string) {
   const [query, setQuery] = useState("");
 
   const normalizedQuery = useMemo(() => query.trim().toLowerCase(), [query]);

@@ -57,9 +57,7 @@ describe("listQueryCache", () => {
     const queryClient = new QueryClient();
     const queryKey = ["products", "http://localhost:3000"] as const;
 
-    queryClient.setQueryData(queryKey, [
-      { id: "1", title: "Before", inStock: true },
-    ]);
+    queryClient.setQueryData(queryKey, [{ id: "1", title: "Before", inStock: true }]);
 
     upsertListCacheItem(queryClient, queryKey, {
       id: "1",

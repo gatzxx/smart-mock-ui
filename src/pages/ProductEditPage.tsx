@@ -16,10 +16,7 @@ import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { useProduct } from "@/hooks/useProduct";
 import { useProductMutations } from "@/hooks/useProductMutations";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
-import {
-  parseProductPrice,
-  type ProductFormValues,
-} from "@/lib/productFormSchema";
+import { parseProductPrice, type ProductFormValues } from "@/lib/productFormSchema";
 
 export const ProductEditPage = memo(function ProductEditPage() {
   const { id } = useParams<{ id: string }>();

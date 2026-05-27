@@ -6,9 +6,7 @@ export async function fetchOpenApiSpec(
   openapiPath: string,
 ): Promise<OpenApiDocument> {
   const baseUrl = apiBaseUrl.replace(/\/$/, "");
-  const normalizedPath = openapiPath.startsWith("/")
-    ? openapiPath
-    : `/${openapiPath}`;
+  const normalizedPath = openapiPath.startsWith("/") ? openapiPath : `/${openapiPath}`;
   const response = await trackedFetch(`${baseUrl}${normalizedPath}`);
 
   if (!response.ok) {

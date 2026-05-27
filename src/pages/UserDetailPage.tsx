@@ -5,12 +5,7 @@ import { Breadcrumbs, type BreadcrumbItem } from "@/components/Breadcrumbs";
 import { UserDetailCard } from "@/components/UserDetailCard";
 import { UserDetailSkeleton } from "@/components/UserDetailSkeleton";
 import { UsersError } from "@/components/UsersError";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
 import { useUser } from "@/hooks/useUser";

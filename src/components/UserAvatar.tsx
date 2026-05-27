@@ -57,11 +57,6 @@ export const UserAvatar = memo(function UserAvatar({
   }
 
   return (
-    <img
-      alt={alt}
-      className={avatarClassName}
-      onError={handleImageError}
-      src={src}
-    />
+    <img alt={alt} className={avatarClassName} onError={handleImageError} src={src} />
   );
 });

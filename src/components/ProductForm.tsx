@@ -3,11 +3,9 @@ import { memo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import {
-  productFormSchema,
-  type ProductFormValues,
-} from "@/lib/productFormSchema";
+import { productFormSchema, type ProductFormValues } from "@/lib/productFormSchema";
 
 type ProductFormProps = {
   defaultValues?: ProductFormValues;
@@ -89,12 +87,7 @@ export const ProductForm = memo(function ProductForm({
       </div>
 
       <div className="flex items-center gap-2">
-        <input
-          className="size-4 rounded border border-input"
-          id="product-inStock"
-          type="checkbox"
-          {...register("inStock")}
-        />
+        <Checkbox id="product-inStock" {...register("inStock")} />
         <label className="text-sm font-medium" htmlFor="product-inStock">
           В наличии
         </label>

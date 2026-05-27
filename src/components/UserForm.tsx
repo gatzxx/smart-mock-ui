@@ -4,10 +4,7 @@ import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  userFormSchema,
-  type UserFormValues,
-} from "@/lib/userFormSchema";
+import { userFormSchema, type UserFormValues } from "@/lib/userFormSchema";
 
 type UserFormProps = {
   defaultValues?: UserFormValues;

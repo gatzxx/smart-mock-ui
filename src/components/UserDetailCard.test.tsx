@@ -27,6 +27,9 @@ describe("UserDetailCard", () => {
     expect(screen.getByText("alice@example.com")).toBeInTheDocument();
     expect(screen.getByText("+1 555 0100")).toBeInTheDocument();
     expect(screen.getByText("Frontend developer.")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /К списку/i })).toHaveAttribute("href", "/users");
+    expect(screen.getByRole("link", { name: /К списку/i })).toHaveAttribute(
+      "href",
+      "/users",
+    );
   });
 });

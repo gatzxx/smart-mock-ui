@@ -74,20 +74,34 @@ export const MetaPage = memo(function MetaPage() {
 
   return (
     <div className="space-y-4">
+      <div>
+        <h2 className="text-lg font-semibold tracking-tight">Meta API</h2>
+        <p className="text-sm text-muted-foreground">
+          Discovery mock-api: маршруты, curl и OpenAPI-спецификация
+        </p>
+      </div>
+
       <Card data-testid="meta-page">
         <CardHeader>
-          <CardTitle>Meta API</CardTitle>
+          <CardTitle>Сводка</CardTitle>
           <CardDescription>
-            Discovery endpoint mock-api:{" "}
+            Discovery-эндпoинт mock-api:{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs">GET /__meta</code>
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
-          <Badge variant="secondary">basePath: {data.basePath}</Badge>
-          <Badge variant="secondary">delay: {data.responseDelayMs} ms</Badge>
-          <Badge variant="secondary">{routes.length} routes</Badge>
+          <Badge variant="secondary">Базовый путь: {data.basePath}</Badge>
+          <Badge variant="secondary">Задержка: {data.responseDelayMs} мс</Badge>
+          <Badge variant="secondary">
+            {routes.length}{" "}
+            {routes.length === 1
+              ? "маршрут"
+              : routes.length < 5
+                ? "маршрута"
+                : "маршрутов"}
+          </Badge>
           {data.schemaVersion !== undefined ? (
-            <Badge variant="secondary">schemaVersion: {data.schemaVersion}</Badge>
+            <Badge variant="secondary">Версия схемы: {data.schemaVersion}</Badge>
           ) : null}
         </CardContent>
       </Card>
@@ -98,16 +112,18 @@ export const MetaPage = memo(function MetaPage() {
 
       <Card data-testid="meta-endpoints-table">
         <CardHeader>
-          <CardTitle className="text-base">Routes</CardTitle>
-          <CardDescription>Method, path and curl copy per endpoint</CardDescription>
+          <CardTitle className="text-base">Маршруты</CardTitle>
+          <CardDescription>
+            Метод, путь и копирование curl для каждого эндпoинта
+          </CardDescription>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Path</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Путь</TableHead>
+                <TableHead>Метод</TableHead>
+                <TableHead className="text-right">Действия</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

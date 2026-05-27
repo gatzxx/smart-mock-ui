@@ -13,11 +13,7 @@ describe("UserForm", () => {
     const handleSubmit = vi.fn();
 
     render(
-      <UserForm
-        isSubmitting={false}
-        submitLabel="Создать"
-        onSubmit={handleSubmit}
-      />,
+      <UserForm isSubmitting={false} submitLabel="Создать" onSubmit={handleSubmit} />,
     );
 
     await user.type(screen.getByLabelText("Email"), "invalid-email");
@@ -36,11 +32,7 @@ describe("UserForm", () => {
     const handleSubmit = vi.fn();
 
     render(
-      <UserForm
-        isSubmitting={false}
-        submitLabel="Создать"
-        onSubmit={handleSubmit}
-      />,
+      <UserForm isSubmitting={false} submitLabel="Создать" onSubmit={handleSubmit} />,
     );
 
     await user.type(screen.getByLabelText("Имя"), "Ada Lovelace");

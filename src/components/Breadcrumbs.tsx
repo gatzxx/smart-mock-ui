@@ -21,11 +21,7 @@ export const Breadcrumbs = memo(function Breadcrumbs({
   testId,
 }: BreadcrumbsProps) {
   return (
-    <nav
-      aria-label="Breadcrumb"
-      className={cn("mb-4", className)}
-      data-testid={testId}
-    >
+    <nav aria-label="Breadcrumb" className={cn("mb-4", className)} data-testid={testId}>
       <ol className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;

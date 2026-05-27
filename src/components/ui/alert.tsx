@@ -38,7 +38,10 @@ export const AlertTitle = memo(function AlertTitle({
 }: HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h5
-      className={cn("col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight", className)}
+      className={cn(
+        "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight",
+        className,
+      )}
       data-slot="alert-title"
       {...props}
     />

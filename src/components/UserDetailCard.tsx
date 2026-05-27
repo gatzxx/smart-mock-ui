@@ -17,7 +17,9 @@ type UserDetailCardProps = {
   user: UserDetail;
 };
 
-export const UserDetailCard = memo(function UserDetailCard({ user }: UserDetailCardProps) {
+export const UserDetailCard = memo(function UserDetailCard({
+  user,
+}: UserDetailCardProps) {
   return (
     <Card data-testid="user-detail-card">
       <CardHeader className="flex flex-row items-start gap-4">
@@ -47,8 +49,7 @@ export const UserDetailCard = memo(function UserDetailCard({ user }: UserDetailC
           </Button>
           <Button asChild variant="outline">
             <Link to="/users">
-              <ArrowLeft aria-hidden="true" className="size-4" />
-              К списку
+              <ArrowLeft aria-hidden="true" className="size-4" />К списку
             </Link>
           </Button>
         </div>

@@ -2,7 +2,10 @@ import { memo, type HTMLAttributes } from "react";
 
 import { cn } from "@/lib/utils";
 
-export const Card = memo(function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+export const Card = memo(function Card({
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(

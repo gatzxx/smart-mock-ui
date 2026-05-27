@@ -27,9 +27,7 @@ describe("ProductForm", () => {
 
     const priceInput = screen.getByLabelText("Цена");
 
-    expect(
-      await screen.findByText("Цена должна быть больше 0"),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("Цена должна быть больше 0")).toBeInTheDocument();
     expect(priceInput).toHaveAttribute("aria-invalid", "true");
     expect(priceInput).toHaveAttribute("aria-describedby", "product-price-error");
     expect(handleSubmit).not.toHaveBeenCalled();

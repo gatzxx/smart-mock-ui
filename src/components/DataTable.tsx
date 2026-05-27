@@ -100,7 +100,7 @@ function DataTableInner<TData>({
             {header.isPlaceholder ? null : canSort ? (
               <button
                 aria-label={`Сортировать: ${headerLabel}`}
-                className="inline-flex items-center gap-1 font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="inline-flex items-center gap-1 font-medium text-muted-foreground hover:text-foreground"
                 type="button"
                 onClick={header.column.getToggleSortingHandler()}
               >
@@ -146,7 +146,10 @@ function DataTableInner<TData>({
       </Table>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground" data-testid={`${testId}-pagination-label`}>
+        <p
+          className="text-sm text-muted-foreground"
+          data-testid={`${testId}-pagination-label`}
+        >
           {paginationLabel}
         </p>
         <div className="flex gap-2">

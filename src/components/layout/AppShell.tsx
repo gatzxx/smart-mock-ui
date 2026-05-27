@@ -31,7 +31,7 @@ export const AppShell = memo(function AppShell() {
   const navLinkClassName = useCallback(
     ({ isActive }: { isActive: boolean }) =>
       cn(
-        "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+        "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium",
         isActive
           ? "bg-sidebar-accent text-sidebar-accent-foreground"
           : "text-sidebar-foreground hover:bg-sidebar-accent/60",
@@ -62,7 +62,9 @@ export const AppShell = memo(function AppShell() {
           <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
             Smart Mock
           </p>
-          <p className="mt-1 text-sm font-medium text-sidebar-foreground">Демо админки</p>
+          <p className="mt-1 text-sm font-medium text-sidebar-foreground">
+            Демо админки
+          </p>
         </div>
         <nav aria-label="Основная навигация" className="flex flex-1 flex-col gap-1 p-3">
           {navItems}
@@ -80,7 +82,10 @@ export const AppShell = memo(function AppShell() {
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <ApiHealthBadge apiBaseUrl={apiBaseUrl} />
-              <ApiActivityToggle isOpen={isActivityOpen} onToggle={handleActivityToggle} />
+              <ApiActivityToggle
+                isOpen={isActivityOpen}
+                onToggle={handleActivityToggle}
+              />
               <ThemeToggle />
               <Link
                 className="text-sm font-medium text-primary underline-offset-4 hover:underline"
@@ -90,10 +95,7 @@ export const AppShell = memo(function AppShell() {
               </Link>
             </div>
           </div>
-          <nav
-            aria-label="Мобильная навигация"
-            className="mt-4 flex gap-2 md:hidden"
-          >
+          <nav aria-label="Мобильная навигация" className="mt-4 flex gap-2 md:hidden">
             {navItems}
           </nav>
           {isActivityOpen ? <ApiActivityPanel onClose={handleActivityClose} /> : null}

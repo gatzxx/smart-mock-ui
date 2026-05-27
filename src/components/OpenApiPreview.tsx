@@ -1,4 +1,6 @@
+import { Copy } from "lucide-react";
 import { memo, useCallback, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { JSON_COPIED_TOAST_MESSAGE } from "@/constants/toast";
 import { useOpenApi } from "@/hooks/useOpenApi";
 import { buildApiUrl } from "@/lib/metaCurl";
 
@@ -37,12 +40,33 @@ export const OpenApiPreview = memo(function OpenApiPreview({
     setIsPreviewOpen((currentIsOpen) => !currentIsOpen);
   }, []);
 
+  const formattedJson = useMemo(() => {
+    if (!data) {
+      return "";
+    }
+
+    return JSON.stringify(data, null, 2);
+  }, [data]);
+
+  const handleCopyJson = useCallback(async () => {
+    if (!formattedJson) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(formattedJson);
+      toast.success(JSON_COPIED_TOAST_MESSAGE);
+    } catch {
+      toast.error("Не удалось скопировать JSON");
+    }
+  }, [formattedJson]);
+
   const errorMessage = useMemo(() => {
     if (error instanceof Error) {
       return error.message;
     }
 
-    return "Не удалось загрузить OpenAPI spec";
+    return "Не удалось загрузить OpenAPI-спецификацию";
   }, [error]);
 
   return (
@@ -50,7 +74,7 @@ export const OpenApiPreview = memo(function OpenApiPreview({
       <CardHeader>
         <CardTitle>OpenAPI</CardTitle>
         <CardDescription>
-          Machine-readable contract:{" "}
+          Контракт в машиночитаемом формате:{" "}
           <a
             className="font-medium text-primary underline-offset-4 hover:underline"
             href={openApiUrl}
@@ -62,16 +86,29 @@ export const OpenApiPreview = memo(function OpenApiPreview({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        <Button size="sm" type="button" variant="outline" onClick={handleTogglePreview}>
-          {isPreviewOpen ? "Скрыть JSON" : "Показать JSON"}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            size="sm"
+            type="button"
+            variant="outline"
+            onClick={handleTogglePreview}
+          >
+            {isPreviewOpen ? "Скрыть JSON" : "Показать JSON"}
+          </Button>
+          {isPreviewOpen && data ? (
+            <Button size="sm" type="button" variant="outline" onClick={handleCopyJson}>
+              <Copy aria-hidden="true" className="size-3.5" />
+              Копировать
+            </Button>
+          ) : null}
+        </div>
         {isPreviewOpen && isPending ? <Skeleton className="h-40 w-full" /> : null}
         {isPreviewOpen && isError ? (
           <p className="text-sm text-destructive">{errorMessage}</p>
         ) : null}
-        {isPreviewOpen && data ? (
+        {isPreviewOpen && formattedJson ? (
           <pre className="max-h-96 overflow-auto rounded-md bg-muted p-3 text-xs leading-relaxed">
-            {JSON.stringify(data, null, 2)}
+            {formattedJson}
           </pre>
         ) : null}
       </CardContent>

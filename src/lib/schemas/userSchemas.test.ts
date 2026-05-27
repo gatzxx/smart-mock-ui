@@ -1,14 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import { parseSchema } from "@/lib/apiClient";
-import {
-  productDetailSchema,
-  productSchema,
-} from "@/lib/schemas/productSchemas";
-import {
-  userDetailSchema,
-  userSchema,
-} from "@/lib/schemas/userSchemas";
+import { productDetailSchema, productSchema } from "@/lib/schemas/productSchemas";
+import { userDetailSchema, userSchema } from "@/lib/schemas/userSchemas";
 
 describe("userSchemas", () => {
   it("parses valid user list item", () => {

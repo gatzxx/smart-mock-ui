@@ -7,3 +7,4 @@ export const PRODUCT_UPDATED_TOAST_MESSAGE = "Товар обновлён";
 export const PRODUCT_DELETED_TOAST_MESSAGE = "Товар удалён";
 
 export const CURL_COPIED_TOAST_MESSAGE = "curl скопирован";
+export const JSON_COPIED_TOAST_MESSAGE = "JSON скопирован";

@@ -1,4 +1,9 @@
-import { memo, type HTMLAttributes, type TdHTMLAttributes, type ThHTMLAttributes } from "react";
+import {
+  memo,
+  type HTMLAttributes,
+  type TdHTMLAttributes,
+  type ThHTMLAttributes,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -49,10 +54,7 @@ export const TableRow = memo(function TableRow({
 }: HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
-      className={cn(
-        "border-b border-border transition-colors hover:bg-muted/50",
-        className,
-      )}
+      className={cn("border-b border-border hover:bg-muted/50", className)}
       data-slot="table-row"
       {...props}
     />

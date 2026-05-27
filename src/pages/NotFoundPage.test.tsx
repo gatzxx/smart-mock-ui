@@ -14,6 +14,9 @@ describe("NotFoundPage", () => {
 
     expect(screen.getByTestId("not-found-page")).toBeInTheDocument();
     expect(screen.getByText("404 - страница не найдена")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "На главную" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: "На главную" })).toHaveAttribute(
+      "href",
+      "/",
+    );
   });
 });

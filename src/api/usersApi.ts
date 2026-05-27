@@ -23,11 +23,7 @@ export async function fetchUsers(apiBaseUrl: string): Promise<User[]> {
   const baseUrl = normalizeBaseUrl(apiBaseUrl);
   const response = await trackedFetch(`${baseUrl}${USERS_PATH}`);
 
-  return parseListResponse(
-    response,
-    userSchema,
-    "Не удалось загрузить пользователей",
-  );
+  return parseListResponse(response, userSchema, "Не удалось загрузить пользователей");
 }
 
 export async function fetchUser(
@@ -56,11 +52,7 @@ export async function createUser(
     body: JSON.stringify(input),
   });
 
-  return parseObjectResponse(
-    response,
-    userSchema,
-    "Не удалось создать пользователя",
-  );
+  return parseObjectResponse(response, userSchema, "Не удалось создать пользователя");
 }
 
 export async function updateUser(
@@ -83,10 +75,7 @@ export async function updateUser(
   );
 }
 
-export async function deleteUser(
-  apiBaseUrl: string,
-  userId: string,
-): Promise<void> {
+export async function deleteUser(apiBaseUrl: string, userId: string): Promise<void> {
   const baseUrl = normalizeBaseUrl(apiBaseUrl);
   const response = await trackedFetch(`${baseUrl}${USERS_PATH}/${userId}`, {
     method: "DELETE",

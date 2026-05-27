@@ -10,6 +10,7 @@ import {
 } from "react";
 
 import { THEME_STORAGE_KEY, type ThemeMode } from "@/constants/theme";
+import { applyTheme } from "@/lib/applyTheme";
 
 type ThemeContextValue = {
   isDark: boolean;
@@ -33,18 +34,13 @@ function readStoredTheme(): ThemeMode {
   return "light";
 }
 
-export function applyTheme(theme: ThemeMode): void {
-  const root = document.documentElement;
-  root.classList.toggle("dark", theme === "dark");
-  root.style.colorScheme = theme;
-  window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-}
-
 type ThemeProviderProps = {
   children: ReactNode;
 };
 
-export const ThemeProvider = memo(function ThemeProvider({ children }: ThemeProviderProps) {
+export const ThemeProvider = memo(function ThemeProvider({
+  children,
+}: ThemeProviderProps) {
   const [theme, setTheme] = useState<ThemeMode>(() => readStoredTheme());
 
   useLayoutEffect(() => {

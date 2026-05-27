@@ -8,9 +8,14 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "tsc -b && vitest run"
+    "typecheck": "tsc -b",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm run test"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
@@ -31,6 +36,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.28.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
@@ -38,8 +44,11 @@
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
     "@vitejs/plugin-react": "^4.5.2",
+    "eslint": "^9.28.0",
     "jsdom": "^26.1.0",
+    "prettier": "^3.5.3",
     "typescript": "~5.8.3",
+    "typescript-eslint": "^8.33.1",
     "vite": "^6.3.5",
     "vitest": "^3.2.1"
   }

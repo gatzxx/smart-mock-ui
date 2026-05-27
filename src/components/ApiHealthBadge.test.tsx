@@ -45,6 +45,8 @@ describe("ApiHealthBadge", () => {
     renderWithQueryClient(<ApiHealthBadge apiBaseUrl="http://localhost:3000" />);
 
     expect(await screen.findByText("API недоступен")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Повторить проверку API" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Повторить проверку API" }),
+    ).toBeInTheDocument();
   });
 });

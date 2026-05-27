@@ -1,1 +1,2 @@
-export { applyTheme, useTheme } from "@/providers/ThemeProvider";
+export { applyTheme } from "@/lib/applyTheme";
+export { useTheme } from "@/providers/ThemeProvider";

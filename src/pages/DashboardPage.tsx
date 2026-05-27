@@ -80,9 +80,7 @@ export const DashboardPage = memo(function DashboardPage() {
       <Card>
         <CardHeader>
           <CardTitle>Обзор</CardTitle>
-          <CardDescription>
-            Сводка по mock API и демо-данным админки.
-          </CardDescription>
+          <CardDescription>Сводка по mock API и демо-данным админки.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
           <Badge variant="secondary">live demo</Badge>

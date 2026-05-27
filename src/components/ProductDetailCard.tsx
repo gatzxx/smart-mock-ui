@@ -51,8 +51,7 @@ export const ProductDetailCard = memo(function ProductDetailCard({
           </Button>
           <Button asChild variant="outline">
             <Link to="/products">
-              <ArrowLeft aria-hidden="true" className="size-4" />
-              К списку
+              <ArrowLeft aria-hidden="true" className="size-4" />К списку
             </Link>
           </Button>
         </div>

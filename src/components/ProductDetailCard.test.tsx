@@ -26,6 +26,9 @@ describe("ProductDetailCard", () => {
     expect(screen.getByText("Wireless Mouse")).toBeInTheDocument();
     expect(screen.getByText("$29.99")).toBeInTheDocument();
     expect(screen.getByText("Ergonomic mouse for daily work.")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /К списку/i })).toHaveAttribute("href", "/products");
+    expect(screen.getByRole("link", { name: /К списку/i })).toHaveAttribute(
+      "href",
+      "/products",
+    );
   });
 });

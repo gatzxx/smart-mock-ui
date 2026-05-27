@@ -40,12 +40,16 @@ describe("DataTable", () => {
     expect(screen.getByText("Item 1")).toBeInTheDocument();
     expect(screen.getByText(`Item ${TABLE_PAGE_SIZE}`)).toBeInTheDocument();
     expect(screen.queryByText(`Item ${TABLE_PAGE_SIZE + 1}`)).not.toBeInTheDocument();
-    expect(screen.getByTestId("data-table-pagination-label")).toHaveTextContent("Страница 1 из 2");
+    expect(screen.getByTestId("data-table-pagination-label")).toHaveTextContent(
+      "Страница 1 из 2",
+    );
 
     fireEvent.click(screen.getByRole("button", { name: "Следующая страница" }));
 
     expect(screen.getByText(`Item ${TABLE_PAGE_SIZE + 1}`)).toBeInTheDocument();
-    expect(screen.getByTestId("data-table-pagination-label")).toHaveTextContent("Страница 2 из 2");
+    expect(screen.getByTestId("data-table-pagination-label")).toHaveTextContent(
+      "Страница 2 из 2",
+    );
   });
 
   it("sorts rows when header is clicked", () => {

@@ -77,7 +77,7 @@ describe("MetaPage", () => {
     expect(await screen.findByTestId("meta-page")).toBeInTheDocument();
     expect(screen.getByText("POST")).toBeInTheDocument();
     expect(screen.getAllByText("GET").length).toBeGreaterThan(0);
-    expect(screen.getByText("schemaVersion: 123456")).toBeInTheDocument();
+    expect(screen.getByText("Версия схемы: 123456")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "/openapi.json" })).toHaveAttribute(
       "href",
       "http://localhost:3000/openapi.json",

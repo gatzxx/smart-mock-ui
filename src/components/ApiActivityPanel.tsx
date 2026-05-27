@@ -65,7 +65,9 @@ const ApiActivityRow = memo(function ApiActivityRow({ entry }: ApiActivityRowPro
         </Badge>
       </TableCell>
       <TableCell className="tabular-nums">{entry.durationMs} ms</TableCell>
-      <TableCell className="text-muted-foreground">{formatTimestamp(entry.timestamp)}</TableCell>
+      <TableCell className="text-muted-foreground">
+        {formatTimestamp(entry.timestamp)}
+      </TableCell>
     </TableRow>
   );
 });
@@ -93,7 +95,10 @@ export const ApiActivityPanel = memo(function ApiActivityPanel({
   );
 
   return (
-    <Card className="rounded-none border-x-0 border-t-0 shadow-none" data-testid="api-activity-panel">
+    <Card
+      className="rounded-none border-x-0 border-t-0 shadow-none"
+      data-testid="api-activity-panel"
+    >
       <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0 pb-4">
         <div>
           <CardTitle className="flex items-center gap-2 text-base">

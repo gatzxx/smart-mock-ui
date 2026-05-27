@@ -37,10 +37,7 @@ describe("trackedFetch", () => {
     const recorder = vi.fn();
     setApiActivityRecorder(recorder);
 
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockRejectedValue(new Error("Network down")),
-    );
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("Network down")));
 
     await expect(trackedFetch("http://localhost:3000/api/users")).rejects.toThrow(
       "Network down",

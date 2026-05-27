@@ -1,11 +1,6 @@
 import { memo } from "react";
 
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const UsersEmpty = memo(function UsersEmpty() {
   return (

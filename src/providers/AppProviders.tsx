@@ -6,6 +6,8 @@ type AppProvidersProps = {
   children: ReactNode;
 };
 
-export const AppProviders = memo(function AppProviders({ children }: AppProvidersProps) {
+export const AppProviders = memo(function AppProviders({
+  children,
+}: AppProvidersProps) {
   return <ApiActivityProvider>{children}</ApiActivityProvider>;
 });
