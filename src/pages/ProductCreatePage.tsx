@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
+import { useFormCancelNavigation } from "@/hooks/useFormCancelNavigation";
 import { useProductMutations } from "@/hooks/useProductMutations";
 import type { ProductFormValues } from "@/lib/productFormSchema";
 
@@ -23,6 +24,7 @@ export const ProductCreatePage = memo(function ProductCreatePage() {
   const apiBaseUrl = useApiBaseUrl();
   const navigate = useNavigate();
   const { createMutation } = useProductMutations(apiBaseUrl);
+  const handleCancel = useFormCancelNavigation("/products");
 
   const handleSubmit = useCallback(
     (values: ProductFormValues) => {
@@ -49,6 +51,7 @@ export const ProductCreatePage = memo(function ProductCreatePage() {
           <ProductForm
             isSubmitting={createMutation.isPending}
             submitLabel="Создать"
+            onCancel={handleCancel}
             onSubmit={handleSubmit}
           />
         </CardContent>

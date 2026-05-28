@@ -9,12 +9,23 @@ import { cn } from "@/lib/utils";
 
 export const Table = memo(function Table({
   className,
+  containerClassName,
   ...props
-}: HTMLAttributes<HTMLTableElement>) {
+}: HTMLAttributes<HTMLTableElement> & {
+  containerClassName?: string;
+}) {
   return (
-    <div className="relative w-full overflow-x-auto rounded-lg border border-border">
+    <div
+      className={cn(
+        "relative w-full overflow-x-auto rounded-lg border border-border",
+        containerClassName,
+      )}
+    >
       <table
-        className={cn("w-full caption-bottom text-sm", className)}
+        className={cn(
+          "w-full caption-bottom text-xs md:text-sm md:min-w-0 md:w-full max-md:min-w-full max-md:w-max",
+          className,
+        )}
         data-slot="table"
         {...props}
       />
@@ -68,7 +79,7 @@ export const TableHead = memo(function TableHead({
   return (
     <th
       className={cn(
-        "h-10 px-4 text-left align-middle font-medium whitespace-nowrap text-muted-foreground",
+        "h-8 px-2 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground md:h-10 md:px-4 md:text-sm",
         className,
       )}
       data-slot="table-head"
@@ -83,7 +94,10 @@ export const TableCell = memo(function TableCell({
 }: TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={cn("px-4 py-3 align-middle whitespace-nowrap", className)}
+      className={cn(
+        "px-2 py-2 align-middle text-xs whitespace-nowrap md:px-4 md:py-3 md:text-sm",
+        className,
+      )}
       data-slot="table-cell"
       {...props}
     />

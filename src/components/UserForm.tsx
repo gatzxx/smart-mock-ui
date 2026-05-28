@@ -10,6 +10,7 @@ type UserFormProps = {
   defaultValues?: UserFormValues;
   isSubmitting: boolean;
   submitLabel: string;
+  onCancel: () => void;
   onSubmit: (values: UserFormValues) => void;
 };
 
@@ -23,16 +24,19 @@ export const UserForm = memo(function UserForm({
   defaultValues,
   isSubmitting,
   submitLabel,
+  onCancel,
   onSubmit,
 }: UserFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<UserFormValues>({
     defaultValues: defaultValues ?? EMPTY_FORM_VALUES,
     resolver: zodResolver(userFormSchema),
   });
+
+  const isSubmitDisabled = isSubmitting || !isDirty;
 
   const handleFormSubmit = useCallback(
     (values: UserFormValues) => {
@@ -100,9 +104,19 @@ export const UserForm = memo(function UserForm({
         ) : null}
       </div>
 
-      <Button disabled={isSubmitting} type="submit">
-        {isSubmitting ? "Сохранение..." : submitLabel}
-      </Button>
+      <div className="flex flex-wrap gap-2">
+        <Button disabled={isSubmitDisabled} type="submit">
+          {isSubmitting ? "Сохранение..." : submitLabel}
+        </Button>
+        <Button
+          disabled={isSubmitting}
+          type="button"
+          variant="outline"
+          onClick={onCancel}
+        >
+          Отмена
+        </Button>
+      </div>
     </form>
   );
 });

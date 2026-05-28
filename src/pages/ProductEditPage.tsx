@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/Breadcrumbs";
 import { ProductDetailSkeleton } from "@/components/ProductDetailSkeleton";
@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
+import { useFormCancelNavigation } from "@/hooks/useFormCancelNavigation";
 import { useProduct } from "@/hooks/useProduct";
 import { useProductMutations } from "@/hooks/useProductMutations";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
@@ -21,9 +22,9 @@ import { parseProductPrice, type ProductFormValues } from "@/lib/productFormSche
 export const ProductEditPage = memo(function ProductEditPage() {
   const { id } = useParams<{ id: string }>();
   const apiBaseUrl = useApiBaseUrl();
-  const navigate = useNavigate();
   const { data, isPending, isError, error, refetch } = useProduct(apiBaseUrl, id);
   const { updateMutation } = useProductMutations(apiBaseUrl);
+  const navigateBack = useFormCancelNavigation("/products");
 
   const handleRetry = useRefetchWithToast(refetch);
 
@@ -69,13 +70,13 @@ export const ProductEditPage = memo(function ProductEditPage() {
       updateMutation.mutate(
         { productId: id, input: values },
         {
-          onSuccess: (updatedProduct) => {
-            navigate(`/products/${updatedProduct.id}`);
+          onSuccess: () => {
+            navigateBack();
           },
         },
       );
     },
-    [id, navigate, updateMutation],
+    [id, navigateBack, updateMutation],
   );
 
   const breadcrumbNav = (
@@ -149,6 +150,7 @@ export const ProductEditPage = memo(function ProductEditPage() {
             defaultValues={defaultValues}
             isSubmitting={updateMutation.isPending}
             submitLabel="Сохранить"
+            onCancel={navigateBack}
             onSubmit={handleSubmit}
           />
         </CardContent>

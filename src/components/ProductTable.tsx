@@ -25,7 +25,7 @@ export const ProductTable = memo(function ProductTable({
         header: "Название",
         cell: ({ row }) => (
           <Link
-            className="font-medium text-primary underline-offset-4 hover:underline"
+            className="pressable-link font-medium text-primary underline-offset-4 hover:underline"
             to={`/products/${row.original.id}`}
           >
             {row.original.title}

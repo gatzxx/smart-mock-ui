@@ -52,6 +52,37 @@ describe("DataTable", () => {
     );
   });
 
+  it("moves to the last available page when current page becomes empty", () => {
+    const { rerender } = render(
+      <DataTable
+        caption="Тестовая таблица"
+        columns={columns}
+        data={mockRows}
+        testId="data-table"
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Следующая страница" }));
+    expect(screen.getByTestId("data-table-pagination-label")).toHaveTextContent(
+      "Страница 2 из 2",
+    );
+
+    rerender(
+      <DataTable
+        caption="Тестовая таблица"
+        columns={columns}
+        data={mockRows.slice(0, TABLE_PAGE_SIZE)}
+        testId="data-table"
+      />,
+    );
+
+    expect(screen.getByTestId("data-table-pagination-label")).toHaveTextContent(
+      "Страница 1 из 1",
+    );
+    expect(screen.getByText("Item 1")).toBeInTheDocument();
+    expect(screen.queryByText(`Item ${TABLE_PAGE_SIZE + 1}`)).not.toBeInTheDocument();
+  });
+
   it("sorts rows when header is clicked", () => {
     const rows: Row[] = [
       { id: "1", name: "Bravo" },

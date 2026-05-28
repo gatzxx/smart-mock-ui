@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -67,6 +67,7 @@ function renderMetaPage() {
 
 describe("MetaPage", () => {
   afterEach(() => {
+    cleanup();
     vi.unstubAllGlobals();
     vi.clearAllMocks();
   });
@@ -84,7 +85,25 @@ describe("MetaPage", () => {
     );
   });
 
-  it("copies curl command for POST route", async () => {
+  it("expands curl preview for a route", async () => {
+    const user = userEvent.setup();
+
+    renderMetaPage();
+    await screen.findByTestId("meta-page");
+
+    expect(
+      screen.queryByTestId("meta-route-curl-POST-/api/users"),
+    ).not.toBeInTheDocument();
+
+    await user.click(screen.getByTestId("meta-route-POST-/api/users"));
+
+    expect(screen.getByTestId("meta-route-curl-POST-/api/users")).toBeInTheDocument();
+    expect(
+      screen.getByText(/-X POST "http:\/\/localhost:3000\/api\/users"/),
+    ).toBeInTheDocument();
+  });
+
+  it("copies curl command from expanded preview", async () => {
     const user = userEvent.setup();
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, "clipboard", {
@@ -95,12 +114,50 @@ describe("MetaPage", () => {
     renderMetaPage();
     await screen.findByTestId("meta-page");
 
-    const copyButtons = screen.getAllByRole("button", { name: /curl/i });
-    await user.click(copyButtons[1] ?? copyButtons[0]);
+    await user.click(screen.getByTestId("meta-route-POST-/api/users"));
+
+    const curlPanel = screen.getByTestId("meta-route-curl-POST-/api/users");
+    await user.click(within(curlPanel).getByRole("button", { name: "Копировать" }));
 
     expect(writeText).toHaveBeenCalledWith(
       expect.stringContaining('-X POST "http://localhost:3000/api/users"'),
     );
     expect(writeText).toHaveBeenCalledWith(expect.stringContaining("-d '{"));
+  });
+
+  it("keeps only one expanded curl preview at a time", async () => {
+    const user = userEvent.setup();
+
+    renderMetaPage();
+    await screen.findByTestId("meta-page");
+
+    await user.click(screen.getByTestId("meta-route-POST-/api/users"));
+    expect(screen.getByTestId("meta-route-curl-POST-/api/users")).toBeInTheDocument();
+
+    await user.click(screen.getByTestId("meta-route-GET-/api/health"));
+    expect(
+      screen.queryByTestId("meta-route-curl-POST-/api/users"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByTestId("meta-route-curl-GET-/api/health")).toBeInTheDocument();
+  });
+
+  it("sorts routes by path when header is clicked", async () => {
+    const user = userEvent.setup();
+
+    renderMetaPage();
+    await screen.findByTestId("meta-endpoints-table");
+
+    const pathRows = () =>
+      screen
+        .getAllByTestId(/^meta-route-/)
+        .map(
+          (row) => row.getAttribute("data-testid")?.split("-").slice(3).join("-") ?? "",
+        );
+
+    expect(pathRows()[0]).toContain("/api/users");
+
+    await user.click(screen.getByRole("button", { name: "Сортировать: Путь" }));
+
+    expect(pathRows()[0]).toContain("/api/health");
   });
 });

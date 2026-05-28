@@ -29,7 +29,10 @@ export const DashboardStatCard = memo(function DashboardStatCard({
   value,
 }: DashboardStatCardProps) {
   const card = (
-    <Card className={cn(href && "hover:bg-accent/40")} data-testid={testId}>
+    <Card
+      className={cn(href && "hover:bg-accent/40 active:bg-accent/60")}
+      data-testid={testId}
+    >
       <CardHeader className="flex flex-row items-start justify-between gap-3">
         <div className="space-y-1">
           <CardDescription>{title}</CardDescription>
@@ -51,7 +54,7 @@ export const DashboardStatCard = memo(function DashboardStatCard({
 
   return (
     <Link
-      className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="pressable block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       to={href}
     >
       {card}

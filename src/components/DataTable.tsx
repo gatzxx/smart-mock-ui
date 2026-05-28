@@ -7,9 +7,9 @@ import {
   type ColumnDef,
   type SortingState,
 } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 
+import { SortableColumnHeader } from "@/components/SortableColumnHeader";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -80,6 +80,14 @@ function DataTableInner<TData>({
   const pageIndex = table.getState().pagination.pageIndex;
   const pageCount = table.getPageCount();
 
+  useEffect(() => {
+    const maxPageIndex = Math.max(pageCount - 1, 0);
+
+    if (pageIndex > maxPageIndex) {
+      table.setPageIndex(maxPageIndex);
+    }
+  }, [pageCount, pageIndex, table]);
+
   const handlePreviousPage = useCallback(() => {
     table.previousPage();
   }, [table]);
@@ -98,21 +106,14 @@ function DataTableInner<TData>({
         return (
           <TableHead key={header.id} scope="col">
             {header.isPlaceholder ? null : canSort ? (
-              <button
-                aria-label={`Сортировать: ${headerLabel}`}
-                className="inline-flex items-center gap-1 font-medium text-muted-foreground hover:text-foreground"
-                type="button"
-                onClick={header.column.getToggleSortingHandler()}
-              >
-                {flexRender(header.column.columnDef.header, header.getContext())}
-                {sortDirection === "asc" ? (
-                  <ArrowUp aria-hidden="true" className="size-3.5" />
-                ) : sortDirection === "desc" ? (
-                  <ArrowDown aria-hidden="true" className="size-3.5" />
-                ) : (
-                  <ArrowUpDown aria-hidden="true" className="size-3.5 opacity-60" />
-                )}
-              </button>
+              <SortableColumnHeader
+                label={flexRender(header.column.columnDef.header, header.getContext())}
+                sortDirection={sortDirection === false ? false : sortDirection}
+                sortLabel={headerLabel}
+                onSort={() => {
+                  header.column.toggleSorting();
+                }}
+              />
             ) : (
               flexRender(header.column.columnDef.header, header.getContext())
             )}
@@ -138,7 +139,7 @@ function DataTableInner<TData>({
   );
 
   return (
-    <div className="space-y-4">
+    <div className="min-w-0 space-y-4">
       <Table data-testid={testId}>
         <caption className="sr-only">{caption}</caption>
         <TableHeader>{headerGroups}</TableHeader>

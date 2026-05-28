@@ -103,3 +103,13 @@
     margin: 0;
   }
 }
+
+@layer utilities {
+  .pressable {
+    @apply cursor-pointer select-none transition-transform duration-75 ease-out active:scale-[0.97] disabled:cursor-not-allowed disabled:active:scale-100;
+  }
+
+  .pressable-link {
+    @apply cursor-pointer transition-opacity duration-75 ease-out active:opacity-70;
+  }
+}

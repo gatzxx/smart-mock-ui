@@ -76,7 +76,7 @@ export const OpenApiPreview = memo(function OpenApiPreview({
         <CardDescription>
           Контракт в машиночитаемом формате:{" "}
           <a
-            className="font-medium text-primary underline-offset-4 hover:underline"
+            className="pressable-link font-medium text-primary underline-offset-4 hover:underline"
             href={openApiUrl}
             rel="noreferrer"
             target="_blank"

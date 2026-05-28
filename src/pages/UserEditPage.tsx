@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/Breadcrumbs";
 import { UserForm } from "@/components/UserForm";
@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
+import { useFormCancelNavigation } from "@/hooks/useFormCancelNavigation";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
 import { useUser } from "@/hooks/useUser";
 import { useUserMutations } from "@/hooks/useUserMutations";
@@ -21,9 +22,9 @@ import type { UserFormValues } from "@/lib/userFormSchema";
 export const UserEditPage = memo(function UserEditPage() {
   const { id } = useParams<{ id: string }>();
   const apiBaseUrl = useApiBaseUrl();
-  const navigate = useNavigate();
   const { data, isPending, isError, error, refetch } = useUser(apiBaseUrl, id);
   const { updateMutation } = useUserMutations(apiBaseUrl);
+  const navigateBack = useFormCancelNavigation("/users");
 
   const handleRetry = useRefetchWithToast(refetch);
 
@@ -69,13 +70,13 @@ export const UserEditPage = memo(function UserEditPage() {
       updateMutation.mutate(
         { userId: id, input: values },
         {
-          onSuccess: (updatedUser) => {
-            navigate(`/users/${updatedUser.id}`);
+          onSuccess: () => {
+            navigateBack();
           },
         },
       );
     },
-    [id, navigate, updateMutation],
+    [id, navigateBack, updateMutation],
   );
 
   const breadcrumbNav = (
@@ -149,6 +150,7 @@ export const UserEditPage = memo(function UserEditPage() {
             defaultValues={defaultValues}
             isSubmitting={updateMutation.isPending}
             submitLabel="Сохранить"
+            onCancel={navigateBack}
             onSubmit={handleSubmit}
           />
         </CardContent>

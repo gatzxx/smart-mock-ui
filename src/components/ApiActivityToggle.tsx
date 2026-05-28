@@ -19,6 +19,7 @@ export const ApiActivityToggle = memo(function ApiActivityToggle({
   return (
     <Button
       aria-expanded={isOpen}
+      aria-label="API Activity"
       data-testid="api-activity-toggle"
       size="sm"
       type="button"
@@ -26,7 +27,7 @@ export const ApiActivityToggle = memo(function ApiActivityToggle({
       onClick={handleClick}
     >
       <Activity aria-hidden="true" className="size-4" />
-      API Activity
+      <span className="hidden sm:inline">API Activity</span>
     </Button>
   );
 });

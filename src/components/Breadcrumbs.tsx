@@ -36,7 +36,7 @@ export const Breadcrumbs = memo(function Breadcrumbs({
               <li>
                 {item.href && !isLast ? (
                   <Link
-                    className="font-medium text-primary underline-offset-4 hover:underline"
+                    className="pressable-link font-medium text-primary underline-offset-4 hover:underline"
                     to={item.href}
                   >
                     {item.label}

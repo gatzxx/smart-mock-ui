@@ -28,23 +28,34 @@ export const AppShell = memo(function AppShell() {
     setIsActivityOpen(false);
   }, []);
 
-  const navLinkClassName = useCallback(
+  const sidebarNavLinkClassName = useCallback(
     ({ isActive }: { isActive: boolean }) =>
       cn(
-        "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium",
+        "pressable flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium",
         isActive
-          ? "bg-sidebar-accent text-sidebar-accent-foreground"
-          : "text-sidebar-foreground hover:bg-sidebar-accent/60",
+          ? "bg-sidebar-accent text-sidebar-accent-foreground active:bg-sidebar-accent/80"
+          : "text-sidebar-foreground hover:bg-sidebar-accent/60 active:bg-sidebar-accent",
       ),
     [],
   );
 
-  const navItems = useMemo(
+  const mobileNavLinkClassName = useCallback(
+    ({ isActive }: { isActive: boolean }) =>
+      cn(
+        "pressable flex shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium whitespace-nowrap",
+        isActive
+          ? "bg-sidebar-accent text-sidebar-accent-foreground active:bg-sidebar-accent/80"
+          : "text-sidebar-foreground hover:bg-sidebar-accent/60 active:bg-sidebar-accent",
+      ),
+    [],
+  );
+
+  const sidebarNavItems = useMemo(
     () =>
       NAV_ITEMS.map(({ to, label, icon: Icon, ...item }) => (
         <NavLink
           key={to}
-          className={navLinkClassName}
+          className={sidebarNavLinkClassName}
           end={"end" in item ? item.end : undefined}
           to={to}
         >
@@ -52,7 +63,23 @@ export const AppShell = memo(function AppShell() {
           {label}
         </NavLink>
       )),
-    [navLinkClassName],
+    [sidebarNavLinkClassName],
+  );
+
+  const mobileNavItems = useMemo(
+    () =>
+      NAV_ITEMS.map(({ to, label, icon: Icon, ...item }) => (
+        <NavLink
+          key={to}
+          className={mobileNavLinkClassName}
+          end={"end" in item ? item.end : undefined}
+          to={to}
+        >
+          <Icon aria-hidden="true" className="size-3.5" />
+          {label}
+        </NavLink>
+      )),
+    [mobileNavLinkClassName],
   );
 
   return (
@@ -67,20 +94,20 @@ export const AppShell = memo(function AppShell() {
           </p>
         </div>
         <nav aria-label="Основная навигация" className="flex flex-1 flex-col gap-1 p-3">
-          {navItems}
+          {sidebarNavItems}
         </nav>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="border-b border-border bg-card px-4 py-4 md:px-6">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+            <div className="min-w-0">
               <h1 className="text-xl font-semibold tracking-tight">Smart Mock UI</h1>
               <p className="text-sm text-muted-foreground">
                 Демо-фронт для smart-mock-api
               </p>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <ApiHealthBadge apiBaseUrl={apiBaseUrl} />
               <ApiActivityToggle
                 isOpen={isActivityOpen}
@@ -88,20 +115,22 @@ export const AppShell = memo(function AppShell() {
               />
               <ThemeToggle />
               <Link
-                className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+                className="pressable-link hidden text-sm font-medium text-primary underline-offset-4 hover:underline md:inline"
                 to="/meta"
               >
                 Meta API
               </Link>
             </div>
           </div>
-          <nav aria-label="Мобильная навигация" className="mt-4 flex gap-2 md:hidden">
-            {navItems}
+          <nav aria-label="Мобильная навигация" className="mt-4 md:hidden">
+            <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+              {mobileNavItems}
+            </div>
           </nav>
           {isActivityOpen ? <ApiActivityPanel onClose={handleActivityClose} /> : null}
         </header>
 
-        <main className="flex-1 p-4 md:p-6">
+        <main className="min-w-0 flex-1 p-4 md:p-6">
           <Outlet />
         </main>
       </div>

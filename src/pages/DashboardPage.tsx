@@ -4,14 +4,7 @@ import { memo, useMemo } from "react";
 import { DashboardSkeleton } from "@/components/DashboardSkeleton";
 import { DashboardStatCard } from "@/components/DashboardStatCard";
 import { UsersError } from "@/components/UsersError";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { useRefetchAllWithToast } from "@/hooks/useRefetchWithToast";
@@ -80,12 +73,10 @@ export const DashboardPage = memo(function DashboardPage() {
       <Card>
         <CardHeader>
           <CardTitle>Обзор</CardTitle>
-          <CardDescription>Сводка по mock API и демо-данным админки.</CardDescription>
+          <CardDescription>
+            Сводка по mock API: списки users/products, health-check и CRUD через REST.
+          </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-wrap gap-2">
-          <Badge variant="secondary">live demo</Badge>
-          <Badge variant="secondary">Live CRUD demo</Badge>
-        </CardContent>
       </Card>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

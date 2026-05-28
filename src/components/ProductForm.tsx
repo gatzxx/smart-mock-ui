@@ -11,6 +11,7 @@ type ProductFormProps = {
   defaultValues?: ProductFormValues;
   isSubmitting: boolean;
   submitLabel: string;
+  onCancel: () => void;
   onSubmit: (values: ProductFormValues) => void;
 };
 
@@ -24,16 +25,19 @@ export const ProductForm = memo(function ProductForm({
   defaultValues,
   isSubmitting,
   submitLabel,
+  onCancel,
   onSubmit,
 }: ProductFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<ProductFormValues>({
     defaultValues: defaultValues ?? EMPTY_FORM_VALUES,
     resolver: zodResolver(productFormSchema),
   });
+
+  const isSubmitDisabled = isSubmitting || !isDirty;
 
   const handleFormSubmit = useCallback(
     (values: ProductFormValues) => {
@@ -93,9 +97,19 @@ export const ProductForm = memo(function ProductForm({
         </label>
       </div>
 
-      <Button disabled={isSubmitting} type="submit">
-        {isSubmitting ? "Сохранение..." : submitLabel}
-      </Button>
+      <div className="flex flex-wrap gap-2">
+        <Button disabled={isSubmitDisabled} type="submit">
+          {isSubmitting ? "Сохранение..." : submitLabel}
+        </Button>
+        <Button
+          disabled={isSubmitting}
+          type="button"
+          variant="outline"
+          onClick={onCancel}
+        >
+          Отмена
+        </Button>
+      </div>
     </form>
   );
 });

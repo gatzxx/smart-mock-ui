@@ -1,6 +1,7 @@
-import { memo, useMemo } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 
-import { MetaEndpointRow } from "@/components/MetaEndpointRow";
+import { MetaEndpointRow, getMetaRouteKey } from "@/components/MetaEndpointRow";
+import { SortableColumnHeader } from "@/components/SortableColumnHeader";
 import { OpenApiPreview } from "@/components/OpenApiPreview";
 import { UsersError } from "@/components/UsersError";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +24,12 @@ import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { useMeta } from "@/hooks/useMeta";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
 import { normalizeMetaRoutes } from "@/lib/metaCurl";
+import {
+  getNextMetaRouteSortState,
+  sortMetaRoutes,
+  type MetaRouteSortField,
+  type MetaRouteSortState,
+} from "@/lib/sortMetaRoutes";
 
 const MetaSkeleton = memo(function MetaSkeleton() {
   return (
@@ -59,6 +66,26 @@ export const MetaPage = memo(function MetaPage() {
 
     return normalizeMetaRoutes(data);
   }, [data]);
+
+  const [expandedRouteKey, setExpandedRouteKey] = useState<string | null>(null);
+  const [sortState, setSortState] = useState<MetaRouteSortState | null>(null);
+
+  const handleToggleRoute = useCallback((routeKey: string) => {
+    setExpandedRouteKey((currentRouteKey) =>
+      currentRouteKey === routeKey ? null : routeKey,
+    );
+  }, []);
+
+  const handleSort = useCallback((field: MetaRouteSortField) => {
+    setSortState((currentSortState) =>
+      getNextMetaRouteSortState(currentSortState, field),
+    );
+  }, []);
+
+  const sortedRoutes = useMemo(
+    () => sortMetaRoutes(routes, sortState),
+    [routes, sortState],
+  );
 
   if (isPending) {
     return <MetaSkeleton />;
@@ -114,26 +141,58 @@ export const MetaPage = memo(function MetaPage() {
         <CardHeader>
           <CardTitle className="text-base">Маршруты</CardTitle>
           <CardDescription>
-            Метод, путь и копирование curl для каждого эндпoинта
+            Метод, путь и просмотр curl для каждого эндпoинта
           </CardDescription>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Путь</TableHead>
-                <TableHead>Метод</TableHead>
-                <TableHead className="text-right">Действия</TableHead>
+                <TableHead scope="col">
+                  <SortableColumnHeader
+                    label="Путь"
+                    sortDirection={
+                      sortState?.field === "path" ? sortState.direction : false
+                    }
+                    sortLabel="Путь"
+                    onSort={() => {
+                      handleSort("path");
+                    }}
+                  />
+                </TableHead>
+                <TableHead scope="col">
+                  <SortableColumnHeader
+                    label="Метод"
+                    sortDirection={
+                      sortState?.field === "method" ? sortState.direction : false
+                    }
+                    sortLabel="Метод"
+                    onSort={() => {
+                      handleSort("method");
+                    }}
+                  />
+                </TableHead>
+                <TableHead className="text-right" scope="col">
+                  Действия
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {routes.map((route) => (
-                <MetaEndpointRow
-                  key={`${route.method}-${route.path}`}
-                  apiBaseUrl={apiBaseUrl}
-                  route={route}
-                />
-              ))}
+              {sortedRoutes.map((route) => {
+                const routeKey = getMetaRouteKey(route);
+
+                return (
+                  <MetaEndpointRow
+                    key={routeKey}
+                    apiBaseUrl={apiBaseUrl}
+                    isExpanded={expandedRouteKey === routeKey}
+                    route={route}
+                    onToggle={() => {
+                      handleToggleRoute(routeKey);
+                    }}
+                  />
+                );
+              })}
             </TableBody>
           </Table>
         </CardContent>

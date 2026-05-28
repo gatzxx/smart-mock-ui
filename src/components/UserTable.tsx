@@ -24,7 +24,7 @@ export const UserTable = memo(function UserTable({
         header: "Имя",
         cell: ({ row }) => (
           <Link
-            className="font-medium text-primary underline-offset-4 hover:underline"
+            className="pressable-link font-medium text-primary underline-offset-4 hover:underline"
             to={`/users/${row.original.id}`}
           >
             {row.original.fullName}
