@@ -1,4 +1,7 @@
 export const queryKeys = {
+  health: {
+    all: (apiBaseUrl: string) => ["health", apiBaseUrl] as const,
+  },
   users: {
     all: (apiBaseUrl: string) => ["users", apiBaseUrl] as const,
     detail: (apiBaseUrl: string, userId: string) =>

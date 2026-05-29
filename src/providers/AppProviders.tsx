@@ -1,6 +1,7 @@
 import { memo, type ReactNode } from "react";
 
 import { ApiActivityProvider } from "@/providers/ApiActivityProvider";
+import { ApiAvailabilityProvider } from "@/providers/ApiAvailabilityProvider";
 
 type AppProvidersProps = {
   children: ReactNode;
@@ -9,5 +10,9 @@ type AppProvidersProps = {
 export const AppProviders = memo(function AppProviders({
   children,
 }: AppProvidersProps) {
-  return <ApiActivityProvider>{children}</ApiActivityProvider>;
+  return (
+    <ApiAvailabilityProvider>
+      <ApiActivityProvider>{children}</ApiActivityProvider>
+    </ApiAvailabilityProvider>
+  );
 });

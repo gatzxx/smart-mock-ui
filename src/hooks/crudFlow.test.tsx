@@ -7,6 +7,7 @@ import { queryKeys } from "@/constants/queryKeys";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { useProductMutations } from "@/hooks/useProductMutations";
 import { getListCount } from "@/lib/listQueryCache";
+import { ApiAvailabilityProvider } from "@/providers/ApiAvailabilityProvider";
 import type { Product } from "@/types/product";
 
 vi.mock("@/api/productsApi", () => ({
@@ -38,7 +39,11 @@ const API_BASE_URL = "http://localhost:3000";
 
 function createWrapper(queryClient: QueryClient) {
   return function Wrapper({ children }: { children: ReactNode }) {
-    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+    return (
+      <QueryClientProvider client={queryClient}>
+        <ApiAvailabilityProvider>{children}</ApiAvailabilityProvider>
+      </QueryClientProvider>
+    );
   };
 }
 
@@ -145,10 +150,9 @@ describe("CRUD list cache flow", () => {
     });
 
     await waitFor(() => {
-      expect(result.current.isPending).toBe(false);
+      expect(result.current.productsCount).toBe(2);
     });
 
-    expect(result.current.productsCount).toBe(2);
     expect(getListCount(queryClient, productsQueryKey)).toBe(2);
   });
 });

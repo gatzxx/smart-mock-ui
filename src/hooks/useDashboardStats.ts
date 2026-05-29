@@ -1,22 +1,23 @@
 import { useCallback, useMemo } from "react";
 
-import { useHealth } from "@/hooks/useHealth";
 import { useProducts } from "@/hooks/useProducts";
+import type { RefetchResult } from "@/hooks/useRefetchWithToast";
 import { useUsers } from "@/hooks/useUsers";
+import { useApiAvailability } from "@/providers/ApiAvailabilityProvider";
 
 export function useDashboardStats(apiBaseUrl: string) {
-  const usersQuery = useUsers(apiBaseUrl);
-  const productsQuery = useProducts(apiBaseUrl);
-  const healthQuery = useHealth(apiBaseUrl);
+  const { isApiReady, isApiWaking, refetch: refetchHealth } = useApiAvailability();
+  const usersQuery = useUsers(apiBaseUrl, { enabled: isApiReady });
+  const productsQuery = useProducts(apiBaseUrl, { enabled: isApiReady });
 
   const isPending = useMemo(
-    () => usersQuery.isPending || productsQuery.isPending,
-    [productsQuery.isPending, usersQuery.isPending],
+    () => isApiReady && (usersQuery.isPending || productsQuery.isPending),
+    [isApiReady, productsQuery.isPending, usersQuery.isPending],
   );
 
   const isError = useMemo(
-    () => usersQuery.isError || productsQuery.isError,
-    [productsQuery.isError, usersQuery.isError],
+    () => isApiReady && (usersQuery.isError || productsQuery.isError),
+    [isApiReady, productsQuery.isError, usersQuery.isError],
   );
 
   const error = useMemo(
@@ -24,18 +25,20 @@ export function useDashboardStats(apiBaseUrl: string) {
     [productsQuery.error, usersQuery.error],
   );
 
-  const refetchAll = useCallback(async () => {
-    return Promise.all([
+  const refetchAll = useCallback(async (): Promise<RefetchResult[]> => {
+    const results = await Promise.all([
       usersQuery.refetch(),
       productsQuery.refetch(),
-      healthQuery.refetch(),
+      refetchHealth(),
     ]);
-  }, [healthQuery, productsQuery, usersQuery]);
+
+    return results.map(({ isSuccess }) => ({ isSuccess }));
+  }, [productsQuery, refetchHealth, usersQuery]);
 
   return {
     usersCount: usersQuery.data?.length ?? 0,
     productsCount: productsQuery.data?.length ?? 0,
-    healthQuery,
+    isApiWaking,
     isPending,
     isError,
     error,

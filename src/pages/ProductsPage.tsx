@@ -1,18 +1,18 @@
-import { Plus } from "lucide-react";
-import { memo, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { memo, useCallback, useMemo } from "react";
 
+import { ApiColdStartAlert } from "@/components/ApiColdStartAlert";
+import { CreateEntityButton } from "@/components/CreateEntityButton";
 import { ProductTable } from "@/components/ProductTable";
 import { ProductsEmpty } from "@/components/ProductsEmpty";
 import { ProductsSkeleton } from "@/components/ProductsSkeleton";
 import { SearchEmpty } from "@/components/SearchEmpty";
 import { TableSearchField } from "@/components/TableSearchField";
 import { UsersError } from "@/components/UsersError";
-import { Button } from "@/components/ui/button";
 import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { useClientSearch } from "@/hooks/useClientSearch";
 import { useProducts } from "@/hooks/useProducts";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
+import { useApiAvailability } from "@/providers/ApiAvailabilityProvider";
 import type { Product } from "@/types/product";
 
 const PRODUCTS_SEARCH_PLACEHOLDER = "Поиск по названию или цене";
@@ -24,14 +24,27 @@ function getProductSearchText(product: Product): string {
 
 export const ProductsPage = memo(function ProductsPage() {
   const apiBaseUrl = useApiBaseUrl();
-  const { data, isPending, isError, error, refetch } = useProducts(apiBaseUrl);
+  const { isApiReady, isApiWaking, refetch: refetchHealth } = useApiAvailability();
+  const { data, isPending, isError, error, refetch } = useProducts(apiBaseUrl, {
+    enabled: isApiReady,
+  });
 
   const { query, setQuery, filteredItems } = useClientSearch(
     data ?? [],
     getProductSearchText,
   );
 
-  const handleRetry = useRefetchWithToast(refetch);
+  const handleRetry = useRefetchWithToast(
+    useCallback(async () => {
+      const [healthResult, dataResult] = await Promise.all([
+        refetchHealth(),
+        refetch(),
+      ]);
+      return {
+        isSuccess: healthResult.isSuccess || dataResult.isSuccess,
+      };
+    }, [refetch, refetchHealth]),
+  );
 
   const errorMessage = useMemo(() => {
     if (error instanceof Error) {
@@ -49,14 +62,22 @@ export const ProductsPage = memo(function ProductsPage() {
           CRUD demo: создание, редактирование и удаление через mock API
         </p>
       </div>
-      <Button asChild>
-        <Link to="/products/new">
-          <Plus aria-hidden="true" className="size-4" />
-          Товар
-        </Link>
-      </Button>
+      <CreateEntityButton
+        label="Товар"
+        testId="products-create-button"
+        to="/products/new"
+      />
     </div>
   );
+
+  if (isApiWaking) {
+    return (
+      <div>
+        {pageHeader}
+        <ApiColdStartAlert />
+      </div>
+    );
+  }
 
   if (isPending) {
     return (

@@ -3,22 +3,16 @@ import { memo, useMemo } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useHealth } from "@/hooks/useHealth";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
+import { useApiAvailability } from "@/providers/ApiAvailabilityProvider";
 
-type ApiHealthBadgeProps = {
-  apiBaseUrl: string;
-};
-
-export const ApiHealthBadge = memo(function ApiHealthBadge({
-  apiBaseUrl,
-}: ApiHealthBadgeProps) {
-  const { data, isPending, isError, refetch, isFetching } = useHealth(apiBaseUrl);
+export const ApiHealthBadge = memo(function ApiHealthBadge() {
+  const { isFetching, refetch, status } = useApiAvailability();
 
   const handleRetry = useRefetchWithToast(refetch);
 
   const badgeContent = useMemo(() => {
-    if (isPending) {
+    if (status === "checking") {
       return (
         <Badge className="gap-1.5" data-testid="api-health-badge" variant="muted">
           <Activity aria-hidden="true" className="size-3" />
@@ -27,7 +21,16 @@ export const ApiHealthBadge = memo(function ApiHealthBadge({
       );
     }
 
-    if (isError || data?.status !== "ok") {
+    if (status === "waking") {
+      return (
+        <Badge className="gap-1.5" data-testid="api-health-badge" variant="muted">
+          <Activity aria-hidden="true" className="size-3 animate-pulse" />
+          API просыпается...
+        </Badge>
+      );
+    }
+
+    if (status === "offline") {
       return (
         <Badge
           className="gap-1.5 border-destructive/30 text-destructive"
@@ -46,12 +49,12 @@ export const ApiHealthBadge = memo(function ApiHealthBadge({
         API online
       </Badge>
     );
-  }, [data?.status, isError, isPending]);
+  }, [status]);
 
   return (
     <div className="flex items-center gap-2">
       {badgeContent}
-      {(isError || data?.status !== "ok") && !isPending ? (
+      {status === "offline" ? (
         <Button
           aria-label="Повторить проверку API"
           disabled={isFetching}

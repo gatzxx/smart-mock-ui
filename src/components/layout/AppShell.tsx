@@ -5,8 +5,8 @@ import { Link, NavLink, Outlet } from "react-router-dom";
 import { ApiActivityPanel } from "@/components/ApiActivityPanel";
 import { ApiActivityToggle } from "@/components/ApiActivityToggle";
 import { ApiHealthBadge } from "@/components/ApiHealthBadge";
+import { ApiWakeupBanner } from "@/components/ApiWakeupBanner";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -18,7 +18,6 @@ const NAV_ITEMS = [
 
 export const AppShell = memo(function AppShell() {
   const [isActivityOpen, setIsActivityOpen] = useState(false);
-  const apiBaseUrl = useApiBaseUrl();
 
   const handleActivityToggle = useCallback(() => {
     setIsActivityOpen((currentIsOpen) => !currentIsOpen);
@@ -108,7 +107,7 @@ export const AppShell = memo(function AppShell() {
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <ApiHealthBadge apiBaseUrl={apiBaseUrl} />
+              <ApiHealthBadge />
               <ApiActivityToggle
                 isOpen={isActivityOpen}
                 onToggle={handleActivityToggle}
@@ -131,6 +130,7 @@ export const AppShell = memo(function AppShell() {
         </header>
 
         <main className="min-w-0 flex-1 p-4 md:p-6">
+          <ApiWakeupBanner />
           <Outlet />
         </main>
       </div>

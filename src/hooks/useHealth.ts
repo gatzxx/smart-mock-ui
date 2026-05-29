@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { fetchHealth } from "@/api/healthApi";
-
-const HEALTH_QUERY_KEY = "health";
+import { queryKeys } from "@/constants/queryKeys";
 
 export function useHealth(apiBaseUrl: string) {
   return useQuery({
-    queryKey: [HEALTH_QUERY_KEY, apiBaseUrl],
+    queryKey: queryKeys.health.all(apiBaseUrl),
     queryFn: () => fetchHealth(apiBaseUrl),
+    refetchOnMount: true,
   });
 }

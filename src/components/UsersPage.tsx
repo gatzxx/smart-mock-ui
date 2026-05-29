@@ -1,18 +1,18 @@
-import { Plus } from "lucide-react";
-import { memo, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { memo, useCallback, useMemo } from "react";
 
+import { ApiColdStartAlert } from "@/components/ApiColdStartAlert";
+import { CreateEntityButton } from "@/components/CreateEntityButton";
 import { SearchEmpty } from "@/components/SearchEmpty";
 import { TableSearchField } from "@/components/TableSearchField";
 import { UserTable } from "@/components/UserTable";
 import { UsersEmpty } from "@/components/UsersEmpty";
 import { UsersError } from "@/components/UsersError";
 import { UsersSkeleton } from "@/components/UsersSkeleton";
-import { Button } from "@/components/ui/button";
 import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { useClientSearch } from "@/hooks/useClientSearch";
 import { useRefetchWithToast } from "@/hooks/useRefetchWithToast";
 import { useUsers } from "@/hooks/useUsers";
+import { useApiAvailability } from "@/providers/ApiAvailabilityProvider";
 import type { User } from "@/types/user";
 
 const USERS_SEARCH_PLACEHOLDER = "Поиск по имени, email или роли";
@@ -23,14 +23,27 @@ function getUserSearchText(user: User): string {
 
 export const UsersPage = memo(function UsersPage() {
   const apiBaseUrl = useApiBaseUrl();
-  const { data, isPending, isError, error, refetch } = useUsers(apiBaseUrl);
+  const { isApiReady, isApiWaking, refetch: refetchHealth } = useApiAvailability();
+  const { data, isPending, isError, error, refetch } = useUsers(apiBaseUrl, {
+    enabled: isApiReady,
+  });
 
   const { query, setQuery, filteredItems } = useClientSearch(
     data ?? [],
     getUserSearchText,
   );
 
-  const handleRetry = useRefetchWithToast(refetch);
+  const handleRetry = useRefetchWithToast(
+    useCallback(async () => {
+      const [healthResult, dataResult] = await Promise.all([
+        refetchHealth(),
+        refetch(),
+      ]);
+      return {
+        isSuccess: healthResult.isSuccess || dataResult.isSuccess,
+      };
+    }, [refetch, refetchHealth]),
+  );
 
   const errorMessage = useMemo(() => {
     if (error instanceof Error) {
@@ -48,14 +61,22 @@ export const UsersPage = memo(function UsersPage() {
           CRUD demo: создание, редактирование и удаление через mock API
         </p>
       </div>
-      <Button asChild>
-        <Link to="/users/new">
-          <Plus aria-hidden="true" className="size-4" />
-          Пользователь
-        </Link>
-      </Button>
+      <CreateEntityButton
+        label="Пользователь"
+        testId="users-create-button"
+        to="/users/new"
+      />
     </div>
   );
+
+  if (isApiWaking) {
+    return (
+      <div>
+        {pageHeader}
+        <ApiColdStartAlert />
+      </div>
+    );
+  }
 
   if (isPending) {
     return (

@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { DashboardPage } from "@/pages/DashboardPage";
+import { ApiAvailabilityProvider } from "@/providers/ApiAvailabilityProvider";
 
 function renderDashboardPage() {
   const queryClient = new QueryClient({
@@ -17,7 +18,9 @@ function renderDashboardPage() {
 
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter>{children}</MemoryRouter>
+      <ApiAvailabilityProvider>
+        <MemoryRouter>{children}</MemoryRouter>
+      </ApiAvailabilityProvider>
     </QueryClientProvider>
   );
 
@@ -29,7 +32,7 @@ describe("DashboardPage", () => {
     vi.unstubAllGlobals();
   });
 
-  it("renders skeleton while dashboard data is loading", () => {
+  it("renders cold start alert while API is waking up", () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(() => new Promise<Response>(() => {})),
@@ -37,7 +40,34 @@ describe("DashboardPage", () => {
 
     renderDashboardPage();
 
-    expect(screen.getByTestId("dashboard-skeleton")).toBeInTheDocument();
+    expect(screen.getByTestId("api-cold-start-alert")).toBeInTheDocument();
+    expect(screen.queryByTestId("dashboard-skeleton")).not.toBeInTheDocument();
+  });
+
+  it("renders skeleton while dashboard data is loading", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation((input: RequestInfo | URL) => {
+        const url = String(input);
+
+        if (url.includes("/api/health")) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({
+              status: "ok",
+              uptime: 42,
+              timestamp: "2026-05-29T12:00:00.000Z",
+            }),
+          });
+        }
+
+        return new Promise<Response>(() => {});
+      }),
+    );
+
+    renderDashboardPage();
+
+    expect(await screen.findByTestId("dashboard-skeleton")).toBeInTheDocument();
   });
 
   it("renders error state when users request fails", async () => {

@@ -1,6 +1,7 @@
 import { Activity, Package, Users } from "lucide-react";
 import { memo, useMemo } from "react";
 
+import { ApiColdStartAlert } from "@/components/ApiColdStartAlert";
 import { DashboardSkeleton } from "@/components/DashboardSkeleton";
 import { DashboardStatCard } from "@/components/DashboardStatCard";
 import { UsersError } from "@/components/UsersError";
@@ -9,14 +10,16 @@ import { useApiBaseUrl } from "@/hooks/useApiBaseUrl";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { useRefetchAllWithToast } from "@/hooks/useRefetchWithToast";
 import { formatHealthTimestamp, formatUptimeSeconds } from "@/lib/formatHealth";
+import { useApiAvailability } from "@/providers/ApiAvailabilityProvider";
 
 export const DashboardPage = memo(function DashboardPage() {
   const apiBaseUrl = useApiBaseUrl();
+  const { healthData, status } = useApiAvailability();
 
   const {
     usersCount,
     productsCount,
-    healthQuery,
+    isApiWaking,
     isPending,
     isError,
     error,
@@ -33,32 +36,52 @@ export const DashboardPage = memo(function DashboardPage() {
   }, [error]);
 
   const healthCardValue = useMemo(() => {
-    if (healthQuery.isPending) {
+    if (status === "checking" || status === "waking") {
       return "…";
     }
 
-    if (healthQuery.isError || healthQuery.data?.status !== "ok") {
+    if (status === "offline") {
       return "Ошибка";
     }
 
     return "Online";
-  }, [healthQuery.data?.status, healthQuery.isError, healthQuery.isPending]);
+  }, [status]);
 
   const healthCardDescription = useMemo(() => {
-    if (healthQuery.isPending) {
+    if (status === "checking") {
       return "Проверяем GET /api/health...";
     }
 
-    if (healthQuery.isError) {
+    if (status === "waking") {
+      return "Mock API просыпается после простоя на Render.";
+    }
+
+    if (status === "offline") {
       return "Mock API не отвечает. Попробуйте обновить страницу.";
     }
 
-    if (healthQuery.data?.status === "ok") {
-      return `Uptime: ${formatUptimeSeconds(healthQuery.data.uptime)} · ${formatHealthTimestamp(healthQuery.data.timestamp)}`;
+    if (healthData?.status === "ok") {
+      return `Uptime: ${formatUptimeSeconds(healthData.uptime)} · ${formatHealthTimestamp(healthData.timestamp)}`;
     }
 
     return "Статус API отличен от ok.";
-  }, [healthQuery.data, healthQuery.isError, healthQuery.isPending]);
+  }, [healthData, status]);
+
+  if (isApiWaking) {
+    return (
+      <div className="space-y-4" data-testid="dashboard-page">
+        <Card>
+          <CardHeader>
+            <CardTitle>Обзор</CardTitle>
+            <CardDescription>
+              Сводка по mock API: списки users/products, health-check и CRUD через REST.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+        <ApiColdStartAlert />
+      </div>
+    );
+  }
 
   if (isPending) {
     return <DashboardSkeleton />;

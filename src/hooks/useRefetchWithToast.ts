@@ -3,11 +3,11 @@ import { toast } from "sonner";
 
 import { REFETCH_SUCCESS_TOAST_MESSAGE } from "@/constants/theme";
 
-type RefetchResult = {
+export type RefetchResult = {
   isSuccess: boolean;
 };
 
-type RefetchFn = () => Promise<RefetchResult>;
+export type RefetchFn = () => Promise<RefetchResult>;
 
 export function useRefetchWithToast(refetch: RefetchFn) {
   return useCallback(async () => {

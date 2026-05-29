@@ -1,11 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import type { ReactElement } from "react";
+import type { ReactElement, ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { ApiHealthBadge } from "@/components/ApiHealthBadge";
+import { ApiAvailabilityProvider } from "@/providers/ApiAvailabilityProvider";
 
-function renderWithQueryClient(ui: ReactElement) {
+function renderWithProviders(ui: ReactElement) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -14,7 +15,13 @@ function renderWithQueryClient(ui: ReactElement) {
     },
   });
 
-  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>
+      <ApiAvailabilityProvider>{children}</ApiAvailabilityProvider>
+    </QueryClientProvider>
+  );
+
+  return render(ui, { wrapper });
 }
 
 describe("ApiHealthBadge", () => {
@@ -28,7 +35,7 @@ describe("ApiHealthBadge", () => {
       vi.fn(() => new Promise<Response>(() => {})),
     );
 
-    renderWithQueryClient(<ApiHealthBadge apiBaseUrl="http://localhost:3000" />);
+    renderWithProviders(<ApiHealthBadge />);
 
     expect(screen.getByTestId("api-health-badge")).toHaveTextContent("Проверка API...");
   });
@@ -42,7 +49,7 @@ describe("ApiHealthBadge", () => {
       }),
     );
 
-    renderWithQueryClient(<ApiHealthBadge apiBaseUrl="http://localhost:3000" />);
+    renderWithProviders(<ApiHealthBadge />);
 
     expect(await screen.findByText("API недоступен")).toBeInTheDocument();
     expect(

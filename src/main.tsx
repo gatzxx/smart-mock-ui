@@ -8,6 +8,7 @@ import { AppErrorBoundary } from "./components/AppErrorBoundary";
 import { ThemedToaster } from "./components/ThemedToaster";
 import { AppProviders } from "./providers/AppProviders";
 import { ThemeProvider } from "./providers/ThemeProvider";
+import { configureHealthQueryDefaults } from "./constants/apiAvailability";
 import { QUERY_STALE_TIME_MS } from "./constants/query";
 import "./index.css";
 
@@ -21,6 +22,8 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+configureHealthQueryDefaults(queryClient);
 
 const rootElement = document.getElementById("root");
 
