@@ -27,7 +27,7 @@ export const ApiWakeupBanner = memo(function ApiWakeupBanner() {
       <AlertDescription>
         <p>
           Mock API на Render free tier может стартовать до{" "}
-          {API_COLD_START_WAIT_HINT_SECONDS} секунд. Подождите — страница обновится
+          {API_COLD_START_WAIT_HINT_SECONDS} секунд. Подождите, страница обновится
           автоматически.
         </p>
       </AlertDescription>
