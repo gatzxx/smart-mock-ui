@@ -1,6 +1,5 @@
 import { memo, useCallback, useMemo } from "react";
 
-import { ApiColdStartAlert } from "@/components/ApiColdStartAlert";
 import { CreateEntityButton } from "@/components/CreateEntityButton";
 import { ProductTable } from "@/components/ProductTable";
 import { ProductsEmpty } from "@/components/ProductsEmpty";
@@ -71,12 +70,7 @@ export const ProductsPage = memo(function ProductsPage() {
   );
 
   if (isApiWaking) {
-    return (
-      <div>
-        {pageHeader}
-        <ApiColdStartAlert />
-      </div>
-    );
+    return <div>{pageHeader}</div>;
   }
 
   if (isPending) {

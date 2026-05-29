@@ -1,7 +1,6 @@
 import { Activity, Package, Users } from "lucide-react";
 import { memo, useMemo } from "react";
 
-import { ApiColdStartAlert } from "@/components/ApiColdStartAlert";
 import { DashboardSkeleton } from "@/components/DashboardSkeleton";
 import { DashboardStatCard } from "@/components/DashboardStatCard";
 import { UsersError } from "@/components/UsersError";
@@ -78,7 +77,6 @@ export const DashboardPage = memo(function DashboardPage() {
             </CardDescription>
           </CardHeader>
         </Card>
-        <ApiColdStartAlert />
       </div>
     );
   }

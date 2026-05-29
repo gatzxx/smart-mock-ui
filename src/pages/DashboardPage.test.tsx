@@ -32,7 +32,7 @@ describe("DashboardPage", () => {
     vi.unstubAllGlobals();
   });
 
-  it("renders cold start alert while API is waking up", () => {
+  it("renders overview without stats while API is waking up", () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(() => new Promise<Response>(() => {})),
@@ -40,8 +40,9 @@ describe("DashboardPage", () => {
 
     renderDashboardPage();
 
-    expect(screen.getByTestId("api-cold-start-alert")).toBeInTheDocument();
+    expect(screen.getByTestId("dashboard-page")).toBeInTheDocument();
     expect(screen.queryByTestId("dashboard-skeleton")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("api-cold-start-alert")).not.toBeInTheDocument();
   });
 
   it("renders skeleton while dashboard data is loading", async () => {

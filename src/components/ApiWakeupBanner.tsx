@@ -13,9 +13,7 @@ export const ApiWakeupBanner = memo(function ApiWakeupBanner() {
   }
 
   const title =
-    status === "checking"
-      ? "Проверяем доступность API"
-      : "API просыпается после простоя";
+    status === "checking" ? "Подключаемся к mock API" : "Mock API просыпается";
 
   return (
     <Alert
@@ -26,9 +24,9 @@ export const ApiWakeupBanner = memo(function ApiWakeupBanner() {
       <AlertTitle>{title}</AlertTitle>
       <AlertDescription>
         <p>
-          Mock API на Render free tier может стартовать до{" "}
-          {API_COLD_START_WAIT_HINT_SECONDS} секунд. Подождите, страница обновится
-          автоматически.
+          После простоя на Render free tier API может стартовать до{" "}
+          {API_COLD_START_WAIT_HINT_SECONDS} секунд. Создание и редактирование временно
+          недоступны. Подождите, страница обновится автоматически.
         </p>
       </AlertDescription>
     </Alert>

@@ -1,7 +1,6 @@
 import { memo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ApiColdStartAlert } from "@/components/ApiColdStartAlert";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/Breadcrumbs";
 import { ProductForm } from "@/components/ProductForm";
 import { UsersError } from "@/components/UsersError";
@@ -47,14 +46,12 @@ export const ProductCreatePage = memo(function ProductCreatePage() {
     return (
       <div className="mx-auto max-w-xl space-y-4">
         <Breadcrumbs items={breadcrumbItems} testId="product-create-breadcrumbs" />
-        {isApiWaking ? (
-          <ApiColdStartAlert />
-        ) : (
+        {!isApiWaking ? (
           <UsersError
             message="Mock API недоступен. Создание товара временно невозможно."
             onRetry={handleRetry}
           />
-        )}
+        ) : null}
       </div>
     );
   }

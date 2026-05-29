@@ -1,7 +1,6 @@
 import { memo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ApiColdStartAlert } from "@/components/ApiColdStartAlert";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/Breadcrumbs";
 import { UserForm } from "@/components/UserForm";
 import { UsersError } from "@/components/UsersError";
@@ -47,14 +46,12 @@ export const UserCreatePage = memo(function UserCreatePage() {
     return (
       <div className="mx-auto max-w-xl space-y-4">
         <Breadcrumbs items={breadcrumbItems} testId="user-create-breadcrumbs" />
-        {isApiWaking ? (
-          <ApiColdStartAlert />
-        ) : (
+        {!isApiWaking ? (
           <UsersError
             message="Mock API недоступен. Создание пользователя временно невозможно."
             onRetry={handleRetry}
           />
-        )}
+        ) : null}
       </div>
     );
   }
