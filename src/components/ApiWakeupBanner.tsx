@@ -17,7 +17,7 @@ export const ApiWakeupBanner = memo(function ApiWakeupBanner() {
 
   return (
     <Alert
-      className="mt-4 border-primary/20 bg-primary/5 text-foreground"
+      className="border-primary/20 bg-primary/5 text-foreground"
       data-testid="api-wakeup-banner"
     >
       <LoaderCircle aria-hidden="true" className="size-4 animate-spin text-primary" />

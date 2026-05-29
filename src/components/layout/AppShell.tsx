@@ -130,8 +130,10 @@ export const AppShell = memo(function AppShell() {
         </header>
 
         <main className="min-w-0 flex-1 p-4 md:p-6">
-          <ApiWakeupBanner />
-          <Outlet />
+          <div className="flex flex-col gap-4">
+            <ApiWakeupBanner />
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>
