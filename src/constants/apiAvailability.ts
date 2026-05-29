@@ -6,6 +6,10 @@ export const HEALTH_COLD_START_RETRY_BASE_MS = 1_000;
 
 export const HEALTH_COLD_START_RETRY_MAX_MS = 8_000;
 
+export const HEALTH_REQUEST_TIMEOUT_MS = 12_000;
+
+export const HEALTH_COLD_START_POLL_INTERVAL_MS = 3_000;
+
 export const API_COLD_START_WAIT_HINT_SECONDS = 30;
 
 export type ApiAvailabilityStatus = "checking" | "waking" | "online" | "offline";
@@ -55,5 +59,6 @@ export function configureHealthQueryDefaults(queryClient: QueryClient): void {
   queryClient.setQueryDefaults(["health"], {
     retry: HEALTH_COLD_START_MAX_ATTEMPTS,
     retryDelay: getHealthRetryDelay,
+    staleTime: 0,
   });
 }
